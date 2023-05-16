@@ -1,0 +1,15 @@
+#ifndef DIRECTIONS_LINE_FOLLOWER_H
+#define DIRECTIONS_LINE_FOLLOWER_H
+
+#define STOP_SLOW 0
+#define STOP_FAST 1
+#define FORWARD_FAST 2
+#define FORWARD_SLOW 3
+#define REVERSE_FAST 4
+#define REVERSE_SLOW 5
+#define RIGHT_WIDE 6
+#define RIGHT_TIGHT 7
+#define LEFT_WIDE 8
+#define LEFT_TIGHT 9
+
+#endif
