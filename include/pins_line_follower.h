@@ -2,10 +2,10 @@
 #define PINS_LINE_FOLLOWER_H
 
 // H-Bridge (L9110S) Dual Channel - 2 DC motors
-#define HB_A_IA = 3; // PWM
-#define HB_A_IB = 2;
+#define HB_M_1A 3 // PWM
+#define HB_M_1B 2
 
-#define HB_B_IA = 5; // PWM
-#define HB_B_IB = 4;
+#define HB_M_2A 5 // PWM
+#define HB_M_2B 4
 
 #endif
