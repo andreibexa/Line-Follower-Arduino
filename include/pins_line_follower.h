@@ -1,5 +1,5 @@
-#ifndef PINS_LINE_FOLLOWER_H
-#define PINS_LINE_FOLLOWER_H
+#ifndef PINS_LINE_FOLLOWER_H_
+#define PINS_LINE_FOLLOWER_H_
 
 // Dual-Channel H-Bridge Motor Driver Module - L9110S
 #define MOTOR_RIGHT_FORWARD_PIN 3  // M1(A) / PWM PIN
@@ -15,4 +15,4 @@
 #define IR_RIGHT_MIDDLE_PIN 10 // S4
 #define IR_RIGHT_EDGE_PIN 9    // S5
 
-#endif
+#endif // PINS_LINE_FOLLOWER_H_
