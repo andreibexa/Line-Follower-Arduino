@@ -14,11 +14,11 @@ void setPinsMode()
   pinMode(MOTOR_LEFT_BACKWARD_PIN, OUTPUT);
 
   // IR Infrared Line Follower Sensor
-  pinMode(13, INPUT);
-  pinMode(12, INPUT);
-  pinMode(11, INPUT);
-  pinMode(10, INPUT);
-  pinMode(9, INPUT);
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  pinMode(A2, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A4, INPUT);
 }
 
 /**
@@ -27,7 +27,7 @@ void setPinsMode()
  */
 void setPinsLow()
 {
-  // Analog pins
+  // Analog pins board
   const uint8_t analogPins[] = {A0, A1, A2, A3, A4, A5, A6, A7};
 
   // Set digital pins to LOW
@@ -36,10 +36,14 @@ void setPinsLow()
     digitalWrite(i, LOW);
   }
 
-  // Set analog pins to LOW
-  for (uint8_t i = 0; i < sizeof(analogPins) / sizeof(analogPins[0]); i++)
+  /**
+   * Set analog pins board to LOW
+   *
+   * STL algorithms and range-based for loops should be preferred to traditional for loops (cpp:S5566)
+   */
+  for (uint8_t PIN : analogPins)
   {
-    analogWrite(analogPins[i], LOW);
+    analogWrite(PIN, LOW);
   }
 }
 
