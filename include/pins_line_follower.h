@@ -2,11 +2,11 @@
 #define PINS_LINE_FOLLOWER_H_
 
 // Dual-Channel H-Bridge Motor Driver Module - L9110S
-#define MOTOR_RIGHT_FORWARD_PIN 3  // M1(A) / PWM PIN
-#define MOTOR_RIGHT_BACKWARD_PIN 2 //  M1(B)
+#define MOTOR_RIGHT_FORWARD_PIN 5  // M1(A) - PWM PIN
+#define MOTOR_RIGHT_BACKWARD_PIN 6 //  M1(B) - PWM PIN
 
-#define MOTOR_LEFT_FORWARD_PIN 5  // M2(A) / PWM PIN
-#define MOTOR_LEFT_BACKWARD_PIN 4 // M2(B)
+#define MOTOR_LEFT_FORWARD_PIN 9   // M2(A) - PWM PIN
+#define MOTOR_LEFT_BACKWARD_PIN 10 // M2(B) - PWM PIN
 
 // IR Infrared Line Follower Sensor - TCRT5000
 #define IR_LEFT_EDGE_PIN 13    // S1
