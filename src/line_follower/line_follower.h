@@ -5,7 +5,7 @@
 #include <pins_line_follower.h>
 
 /**
- * @brief Initialize Line follower
+ * @brief Activate line follower mode
  *
  */
 void activateLineFollowerMode();
@@ -15,12 +15,5 @@ void activateLineFollowerMode();
  * ? Should I disable more pins
  */
 void deactivateLineFollowerMode();
-
-/**
- * @brief Set the pin value of IR Infrared sensors to LOW or HIGH
- *
- * @param val The pin value (LOW or HIGH).
- */
-void setIrInfraredSensors(uint8_t val);
 
 #endif // SRC_LINE_FOLLOWER_LINE_FOLLOWER_H_

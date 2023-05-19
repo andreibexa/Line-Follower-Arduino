@@ -1,5 +1,6 @@
-#include <Arduino.h>
-#include "../include/pins_line_follower.h"
+#include <pins_line_follower.h>
+#include "line_follower/qtr_sensor/qtr_sensor.h"
+#include "line_follower/qtr_sensor/calibrate_qtr.h"
 
 /**
  * @brief Initialize Pin Mode
@@ -13,45 +14,29 @@ void setPinsMode()
   pinMode(MOTOR_LEFT_FORWARD_PIN, OUTPUT);
   pinMode(MOTOR_LEFT_BACKWARD_PIN, OUTPUT);
 
-  // IR Infrared Line Follower Sensor
-  pinMode(A0, INPUT);
-  pinMode(A1, INPUT);
-  pinMode(A2, INPUT);
-  pinMode(A3, INPUT);
-  pinMode(A4, INPUT);
-}
-
-/**
- * @brief Power optimization. Set Arduino digital and analog pins to LOW
- *
- */
-void setPinsLow()
-{
-  // Analog pins board
-  const uint8_t analogPins[] = {A0, A1, A2, A3, A4, A5, A6, A7};
-
-  // Set digital pins to LOW
-  for (uint8_t i = 2; i < NUM_DIGITAL_PINS; i++)
-  {
-    digitalWrite(i, LOW);
-  }
-
-  /**
-   * Set analog pins board to LOW
-   *
-   * STL algorithms and range-based for loops should be preferred to traditional for loops (cpp:S5566)
-   */
-  for (uint8_t PIN : analogPins)
-  {
-    analogWrite(PIN, LOW);
-  }
+  // QTR Infrared Line Follower Sensor
+  pinMode(QTR_LEFT_EDGE_PIN, INPUT);
+  pinMode(QTR_LEFT_MIDDLE_PIN, INPUT);
+  pinMode(QTR_MIDDLE, INPUT);
+  pinMode(QTR_RIGHT_MIDDLE_PIN, INPUT);
+  pinMode(QTR_RIGHT_EDGE_PIN, INPUT);
 }
 
 void setup()
 {
-  // put your setup code here, to run once:
+
+  // Put your setup code here, to run once:
   Serial.begin(9600);
 
+  // Disable Arduino builtin led
+  digitalWrite(LED_BUILTIN, LOW);
+
+  // SET pins mode OUTPUT/INPUT
   setPinsMode();
-  setPinsLow();
+
+  // Setup the line follower QTR sensor
+  SetupQTRSensor();
+
+  InitializeQTRCalibration();
+  printQTRCalibrationValue();
 }
