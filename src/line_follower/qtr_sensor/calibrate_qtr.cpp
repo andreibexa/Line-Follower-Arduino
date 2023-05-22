@@ -15,19 +15,17 @@
 void InitializeQTRCalibration()
 {
   Serial.println("Calibration start");
-  // Turn on Arduino's LED to indicate we are in calibration mode
-  digitalWrite(LED_BUILTIN, HIGH);
 
-  for (uint8_t i = 0; i < 3; i++)
+  // Turn on Arduino's LED to indicate we are in calibration mode
+
+  for (uint8_t i = 0; i < 1; i++)
   {
     // Slide the QTR sensor across the line during the calibration phase
     SlideQTRSensor();
 
-    performCalibration(80);
+    // read qtr sensor 40 times for each slide
+    performCalibration(40);
   }
-
-  // Turn off Arduino's LED to indicate we are done with calibration
-  digitalWrite(LED_BUILTIN, LOW);
 
   Serial.println("Calibration ends");
 }
@@ -38,14 +36,16 @@ void InitializeQTRCalibration()
  */
 void SlideQTRSensor()
 {
-  uint16_t period = 800;
-  uint8_t speed_forward = 100;
-  uint8_t speed_backward = 98;
+  uint8_t speed_forward = 85;
+  uint8_t speed_backward = 80;
+  uint16_t period = 480;
 
   controlDirection(RIGHT_WIDE_FORWARD, speed_forward, period);
   controlDirection(RIGHT_WIDE_BACKWARD, speed_backward, period);
+  delay(500);
   controlDirection(LEFT_WIDE_FORWARD, speed_forward, period);
   controlDirection(LEFT_WIDE_BACKWARD, speed_backward, period);
+  delay(500);
 }
 
 /**

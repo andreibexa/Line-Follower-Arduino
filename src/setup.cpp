@@ -28,9 +28,6 @@ void setup()
   // Put your setup code here, to run once:
   Serial.begin(9600);
 
-  // Disable Arduino builtin led
-  digitalWrite(LED_BUILTIN, LOW);
-
   // SET pins mode OUTPUT/INPUT
   setPinsMode();
 

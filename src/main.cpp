@@ -10,7 +10,6 @@
  */
 void loop()
 {
-  // delay(3000);
 
   activateLineFollowerMode();
 

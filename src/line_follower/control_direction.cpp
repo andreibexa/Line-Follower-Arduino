@@ -14,9 +14,6 @@ void controlDirection(uint8_t direction, uint8_t speed = 100, int16_t period = 1
   uint32_t start_time = millis();
   uint32_t current_time = start_time;
 
-  // Limit the speed between 0 and 100
-  speed = constrain(speed, 0, 100);
-
   // Map the speed value to 0-255 range
   uint8_t map_speed = map(speed, 0, 100, 0, 255);
 
