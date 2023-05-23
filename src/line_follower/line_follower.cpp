@@ -17,7 +17,7 @@ void activateLineFollowerMode()
   static int last_error = 0;
 
   // Define PID constants
-  const double Kp = 0.25;
+  const double Kp = 0.26;
   const double Kd = 0;
 
   // Compute our "error" from the line position. We will make it so that the
@@ -25,7 +25,7 @@ void activateLineFollowerMode()
   // goal. Error will range from 1500 to 2500. If we have sensor 1500 on the left
   // and sensor 2 on the right, a reading of 1500 means that we see the line on
   // the left and a reading of 2500 means we see the line on the right.
-  int16_t error = readLinePosition() - 500;
+  int16_t error = 2000 - readLinePosition();
 
   // Set the motor speed based on proportional and derivative PID terms:
   // KP is the floating-point proportional constant (maybe start with a value around 0.1)
@@ -36,29 +36,29 @@ void activateLineFollowerMode()
   last_error = error;
 
   // Adjust the speed of the motors based on the PID control signal
-  int16_t motor_right_speed = constrain(190 + pid, 0, 190);
-  int16_t motor_left_speed = constrain(190 - pid, 0, 190);
+  int16_t motor_right_speed = constrain(190 - pid, 0, 190);
+  int16_t motor_left_speed = constrain(190 + pid, 0, 190);
 
   analogWrite(MOTOR_RIGHT_FORWARD_PIN, motor_right_speed);
   analogWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
   analogWrite(MOTOR_LEFT_FORWARD_PIN, motor_left_speed);
   analogWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
 
-  for (uint8_t i = 0; i < QTR_SENSOR_COUNT; i++)
-  {
-    Serial.print(QTR_SENSOR_VALUES[i]);
+  /*   for (uint8_t i = 0; i < QTR_SENSOR_COUNT; i++)
+    {
+      Serial.print(QTR_SENSOR_VALUES[i]);
+      Serial.print('\t');
+    }
+
+    Serial.print(readLinePosition());
     Serial.print('\t');
-  }
 
-  Serial.print(readLinePosition());
-  Serial.print('\t');
-
-  Serial.print('\t');
-  Serial.print(motor_left_speed);
-  Serial.print('\t');
-  Serial.print(motor_right_speed);
-  Serial.println();
-  delay(1000);
+    Serial.print('\t');
+    Serial.print(motor_left_speed);
+    Serial.print('\t');
+    Serial.print(motor_right_speed);
+    Serial.println();
+    delay(1000); */
 }
 
 /**

@@ -11,10 +11,10 @@
 #define MOTOR_LEFT_BACKWARD_PIN 10 // M2(B) - PWM PIN
 
 // QTR Infrared Line Follower Sensor - TCRT5000
-#define QTR_LEFT_EDGE_PIN A0    // S1
-#define QTR_LEFT_MIDDLE_PIN A1  // S2
+#define QTR_LEFT_EDGE_PIN A4    // S1
+#define QTR_LEFT_MIDDLE_PIN A3  // S2
 #define QTR_MIDDLE A2           // S3
-#define QTR_RIGHT_MIDDLE_PIN A3 // S4
-#define QTR_RIGHT_EDGE_PIN A4   // S5
+#define QTR_RIGHT_MIDDLE_PIN A1 // S4
+#define QTR_RIGHT_EDGE_PIN A0   // S5
 
 #endif // PINS_LINE_FOLLOWER_H_
