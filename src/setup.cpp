@@ -34,6 +34,7 @@ void setup()
   // Setup the line follower QTR sensor
   SetupQTRSensor();
 
+  delay(1000);
   InitializeQTRCalibration();
   printQTRCalibrationValue();
 }

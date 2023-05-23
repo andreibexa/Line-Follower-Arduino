@@ -15,7 +15,7 @@ uint16_t QTR_SENSOR_VALUES[QTR_SENSOR_COUNT];
 void SetupQTRSensor()
 {
   // Initialize the sensors.
-  // In this example we have 5 QTR sensors .
+  // We have 5 QTR sensors .
   qtr.setTypeAnalog();
   qtr.setSensorPins((const uint8_t[]){
                         QTR_LEFT_EDGE_PIN,
@@ -24,6 +24,4 @@ void SetupQTRSensor()
                         QTR_RIGHT_MIDDLE_PIN,
                         QTR_RIGHT_EDGE_PIN},
                     QTR_SENSOR_COUNT);
-
-  qtr.setDimmingLevel(0);
 }

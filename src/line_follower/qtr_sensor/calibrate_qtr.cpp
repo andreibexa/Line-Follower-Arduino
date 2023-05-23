@@ -36,9 +36,9 @@ void InitializeQTRCalibration()
  */
 void SlideQTRSensor()
 {
-  uint8_t speed_forward = 85;
-  uint8_t speed_backward = 80;
-  uint16_t period = 480;
+  uint8_t speed_forward = 88;
+  uint8_t speed_backward = 78;
+  uint16_t period = 490;
 
   controlDirection(RIGHT_WIDE_FORWARD, speed_forward, period);
   controlDirection(RIGHT_WIDE_BACKWARD, speed_backward, period);
