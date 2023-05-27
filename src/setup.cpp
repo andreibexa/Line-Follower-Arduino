@@ -1,6 +1,4 @@
 #include <pins_line_follower.h>
-#include "line_follower/qtr_sensor/qtr_sensor.h"
-#include "line_follower/qtr_sensor/calibrate_qtr.h"
 
 /**
  * @brief Initialize Pin Mode
@@ -14,27 +12,30 @@ void setPinsMode()
   pinMode(MOTOR_LEFT_FORWARD_PIN, OUTPUT);
   pinMode(MOTOR_LEFT_BACKWARD_PIN, OUTPUT);
 
+  // initialize LED_BUILTIN pin as an output pin
+  pinMode(LED_BUILTIN, OUTPUT);
+
   // QTR Infrared Line Follower Sensor
-  pinMode(QTR_LEFT_EDGE_PIN, INPUT);
-  pinMode(QTR_LEFT_MIDDLE_PIN, INPUT);
-  pinMode(QTR_MIDDLE, INPUT);
-  pinMode(QTR_RIGHT_MIDDLE_PIN, INPUT);
-  pinMode(QTR_RIGHT_EDGE_PIN, INPUT);
+  pinMode(IR_TRACKING_SENSOR_LEFT_PIN, INPUT);
+  pinMode(IR_TRACKING_SENSOR_CENTER_PIN, INPUT);
+  pinMode(IR_TRACKING_SENSOR_RIGHT_PIN, INPUT);
 }
 
+/**
+ * @brief Arduino setup function
+ *
+ */
 void setup()
 {
-
   // Put your setup code here, to run once:
   Serial.begin(9600);
+
+  Serial.print("Frecvența CPU-ului: ");
+  Serial.print(F_CPU);
+  Serial.println(" Hz");
 
   // SET pins mode OUTPUT/INPUT
   setPinsMode();
 
-  // Setup the line follower QTR sensor
-  SetupQTRSensor();
-
-  delay(1000);
-  InitializeQTRCalibration();
-  printQTRCalibrationValue();
+  delay(3000);
 }

@@ -17,12 +17,11 @@ enum Direction
 };
 
 /**
- * @brief Control the direction and speed of both wheels
+ * @brief Control the direction and speed of both motors
  *
  * @param direction Movement direction
- * @param speed Movement speed (0-100, with max speed 100)
- * @param period Running period in ms (-1 for infinite period, or period > 0)
+ * @param speed Movement speed (0-255)
  */
-void controlDirection(uint8_t direction, uint8_t speed, int16_t period);
+void controlDirection(uint8_t direction, uint8_t speed);
 
 #endif // SRC_LINE_FOLLOWER_CONTROL_DIRECTION_H_

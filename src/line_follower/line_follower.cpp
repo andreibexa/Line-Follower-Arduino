@@ -1,109 +1,175 @@
 #include <Arduino.h>
 #include <pins_line_follower.h>
-#include "line_follower/qtr_sensor/qtr_sensor.h"
 #include "line_follower/line_follower.h"
 #include "line_follower/control_direction.h"
 
+const uint8_t line_sensor_count = 3; // Number of line sensors
+uint8_t line_sensor_values[line_sensor_count];
+uint8_t total_inactive_line_sensor;
+
 /**
- * @brief Activates the line follower mode and adjusts the motor direction and
- * speed based on line position.
- * This function reads the calibrated sensor values and calculates
- * the line position error using a PID control algorithm.
+ * @brief Activates the line follower mode
  *
  */
-
 void activateLineFollowerMode()
 {
-  static int last_error = 0;
+  // Get calibrated sensor values returned in the sensors array, along with the
+  // line position, which will range from 0 to 1500, with 1000 corresponding to
+  // a position under the middle sensor.
+  int current_position = readLinePosition();
 
-  // Define PID constants
-  const double Kp = 0.25;
-  const double Kd = 0;
-
-  // Compute our "error" from the line position. We will make it so that the
-  // error is zero when the middle sensor is over the line, because this is our
-  // goal. Error will range from 1500 to 2500. If we have sensor 1500 on the left
-  // and sensor 2 on the right, a reading of 1500 means that we see the line on
-  // the left and a reading of 2500 means we see the line on the right.
-  int16_t error = readLinePosition() - 500;
-
-  // Set the motor speed based on proportional and derivative PID terms:
-  // KP is the floating-point proportional constant (maybe start with a value around 0.1)
-  // KD is the floating-point derivative constant (maybe start with a value around 5)
-  // Note that when doing PID, it is very important you get your signs right, or
-  // else the control loop will be unstable.
-  int16_t pid = Kp * error + Kd * (error - last_error);
-  last_error = error;
-
-  // Adjust the speed of the motors based on the PID control signal
-  int16_t motor_right_speed = constrain(190 + pid, 0, 190);
-  int16_t motor_left_speed = constrain(190 - pid, 0, 190);
-
-  analogWrite(MOTOR_RIGHT_FORWARD_PIN, motor_right_speed);
-  analogWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
-  analogWrite(MOTOR_LEFT_FORWARD_PIN, motor_left_speed);
-  analogWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
-
-  for (uint8_t i = 0; i < QTR_SENSOR_COUNT; i++)
+  while (current_position != -1)
   {
-    Serial.print(QTR_SENSOR_VALUES[i]);
-    Serial.print('\t');
+    calculatePID(current_position);
+
+    current_position = readLinePosition();
   }
 
-  Serial.print(readLinePosition());
-  Serial.print('\t');
-
-  Serial.print('\t');
-  Serial.print(motor_left_speed);
-  Serial.print('\t');
-  Serial.print(motor_right_speed);
-  Serial.println();
-  delay(1000);
+  deactivateLineFollowerMode();
 }
 
 /**
- * @brief Reads the line position using QTR sensors and returns the calibrated position value.
+ * @brief Deactivate the line follower mode
  *
- * @return The line position value
  */
-uint16_t readLinePosition()
+void deactivateLineFollowerMode()
 {
-  static int last_position = 2000;
-  uint16_t total_qtr_sensor_values = 0;
+  controlDirection(STOP_SLOW, 0);
+}
+
+/**
+ * @brief This function calculates the line position error using a PID control algorithm.
+ *
+ */
+void calculatePID(int current_position)
+{
+  uint8_t base_speed = 200;
+  uint8_t max_speed = 255;
+  static int16_t last_error = 0;
+  float Kp = 0.29;
+  float Kd = 0;
+
+  // Calculate the error as the difference between the desired position (1000) and the current position
+  int16_t error = 1000 - current_position;
+
+  // Set the motor speed based on proportional, integral, and derivative PID terms.
+  float pid = Kp * error + Kd * (error - last_error);
+
+  // Record the current error for the next iteration
+  last_error = error;
+
+  // Adjust the speed of the motors based on the PID control signal
+  uint8_t motor_left_speed = constrain(base_speed - pid, 0, max_speed);
+  uint8_t motor_right_speed = constrain(base_speed + pid, 0, max_speed);
+
+  // If the line is not detected by any sensor, turn tight to to last known position
+  /*   if (total_inactive_line_sensor == line_sensor_count && current_position != 1000)
+    {
+      restorePosition(motor_left_speed, motor_right_speed);
+      return;
+    } */
+
+  analogWrite(MOTOR_LEFT_FORWARD_PIN, motor_left_speed);
+  digitalWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
+  analogWrite(MOTOR_RIGHT_FORWARD_PIN, motor_right_speed);
+  digitalWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
+
+  // SerialPrintPosition(current_position, motor_left_speed, motor_right_speed);
+}
+
+/**
+ * Out of line. Turn back to the last known position
+ *
+ */
+void restorePosition(uint8_t motor_left_speed, uint8_t motor_right_speed)
+{
+  if (motor_left_speed > motor_right_speed)
+  {
+    // RIGHT_TIGHT_FORWARD
+    analogWrite(MOTOR_LEFT_FORWARD_PIN, motor_left_speed);
+    digitalWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
+    digitalWrite(MOTOR_RIGHT_FORWARD_PIN, LOW);
+    analogWrite(MOTOR_RIGHT_BACKWARD_PIN, 1);
+  }
+  else if (motor_left_speed < motor_right_speed)
+  {
+    // LEFT_TIGHT_FORWARD
+    digitalWrite(MOTOR_LEFT_FORWARD_PIN, LOW);
+    analogWrite(MOTOR_LEFT_BACKWARD_PIN, 1);
+    analogWrite(MOTOR_RIGHT_FORWARD_PIN, motor_right_speed);
+    digitalWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
+  }
+}
+
+/**
+ * @brief Reads the line position using the IR sensors.
+ *
+ * @return Position value (500, 1000, 1500)
+ */
+unsigned int readLinePosition()
+{
+  // Read the IR sensors each 2500 micro seconds
+  unsigned long interval = 1;
+  static unsigned long previousTime = 0;
+  unsigned long currentTime = micros();
+
+  if (currentTime - previousTime >= interval)
+  {
+    line_sensor_values[0] = digitalRead(IR_TRACKING_SENSOR_RIGHT_PIN);
+    line_sensor_values[1] = digitalRead(IR_TRACKING_SENSOR_CENTER_PIN);
+    line_sensor_values[2] = digitalRead(IR_TRACKING_SENSOR_LEFT_PIN);
+
+    previousTime = currentTime;
+  }
+
+  static int last_position = 1000; // line in the center
 
   // Get calibrated sensor values returned in the sensors array,
   // along with the line position.
-  // position will range from 1500 to 2500, with 2000 corresponding
+  // position will range from 1500 to 3000, with 1500 corresponding
   // to the line over the middle sensor
-  uint16_t position = qtr.readLineBlack(QTR_SENSOR_VALUES);
 
-  // Get sum of qtr sensor values
-  for (uint8_t i = 0; i < QTR_SENSOR_COUNT; i++)
-  {
-    total_qtr_sensor_values += QTR_SENSOR_VALUES[i];
-  }
+  total_inactive_line_sensor = line_sensor_values[0] + line_sensor_values[1] + line_sensor_values[2];
+
+  uint16_t position = (2000 * line_sensor_values[2] + 1000 * line_sensor_values[1] +
+                       0 * line_sensor_values[0]) /
+                      total_inactive_line_sensor;
 
   // Remembers where the sensor saw the line,
   // so if you ever lose the line to the left or the right,
   // its line position will continue to indicate the direction
-  // you need to go to reacquire the line, even the path background is not white
-  if (total_qtr_sensor_values >= 4900)
+  // you need to go to reacquire the line
+
+  if (total_inactive_line_sensor == line_sensor_count)
   {
     position = last_position;
   }
-  else
-  {
-    last_position = position;
-  }
+
+  last_position = position;
 
   return position;
 }
 
 /**
- * @brief Disable the Line follower mode
- * ? Should i disable more pins
+ * @brief Serial prints the line and motor positions.
+ *
  */
-void deactivateLineFollowerMode()
+void SerialPrintPosition(uint16_t current_position, uint8_t motor_left_speed, uint8_t motor_right_speed)
 {
-  // !TODO(my_username): call motorStopFunction()
+  for (int i = 0; i < line_sensor_count; i++)
+  {
+    Serial.print(line_sensor_values[i]);
+    Serial.print("\t");
+  }
+
+  Serial.print(current_position);
+  Serial.print("\t");
+
+  Serial.print(motor_left_speed);
+  Serial.print("\t");
+
+  Serial.print(motor_right_speed);
+  Serial.print("\t");
+  Serial.println();
+  delay(1500);
 }

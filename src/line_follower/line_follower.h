@@ -17,10 +17,28 @@ void activateLineFollowerMode();
 void deactivateLineFollowerMode();
 
 /**
- * @brief Reads the line position using QTR sensors and returns the calibrated position value.
+ * @brief This function calculate the line position error using a PID control algorithm.
  *
- * @return The line position value
  */
-uint16_t readLinePosition();
+void calculatePID(int current_position);
+
+/**
+ * Out of line. Turn back to the last known position
+ *
+ */
+void restorePosition(uint8_t motor_left_speed, uint8_t motor_right_speed);
+
+/**
+ * @brief Reads the line position using the IR sensors.
+ *
+ * @return Position value (500, 1000, 1500)
+ */
+unsigned int readLinePosition();
+
+/**
+ * @brief Serial prints the line and motor positions.
+ *
+ */
+void SerialPrintPosition(uint16_t current_position, uint8_t motor_left_speed, uint8_t motor_right_speed);
 
 #endif // SRC_LINE_FOLLOWER_LINE_FOLLOWER_H_
