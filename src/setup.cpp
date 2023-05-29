@@ -12,30 +12,30 @@ void setPinsMode()
   pinMode(MOTOR_LEFT_FORWARD_PIN, OUTPUT);
   pinMode(MOTOR_LEFT_BACKWARD_PIN, OUTPUT);
 
-  // initialize LED_BUILTIN pin as an output pin
-  pinMode(LED_BUILTIN, OUTPUT);
-
-  // QTR Infrared Line Follower Sensor
+  // IR Infrared Line Follower Sensor Module
   pinMode(IR_TRACKING_SENSOR_LEFT_PIN, INPUT);
   pinMode(IR_TRACKING_SENSOR_CENTER_PIN, INPUT);
   pinMode(IR_TRACKING_SENSOR_RIGHT_PIN, INPUT);
-}
 
-/**
- * @brief Arduino setup function
- *
- */
-void setup()
-{
-  // Put your setup code here, to run once:
-  Serial.begin(9600);
+  // Ultrasonic Sensor Module
+  pinMode(ULTRASONIC_TRIG_PIN, OUTPUT);
+  pinMode(ULTRASONIC_ECHO_PIN, INPUT);
 
-  Serial.print("Frecvența CPU-ului: ");
-  Serial.print(F_CPU);
-  Serial.println(" Hz");
+  /**
+   * @brief Arduino setup function
+   *
+   */
+  void setup()
+  {
+    // Put your setup code here, to run once:
+    Serial.begin(9600);
 
-  // SET pins mode OUTPUT/INPUT
-  setPinsMode();
+    Serial.print("Frecvența CPU-ului: ");
+    Serial.print(F_CPU);
+    Serial.println(" Hz");
 
-  delay(3000);
-}
+    // SET pins mode OUTPUT/INPUT
+    setPinsMode();
+
+    delay(3000);
+  }
