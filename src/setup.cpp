@@ -20,22 +20,19 @@ void setPinsMode()
   // Ultrasonic Sensor Module
   pinMode(ULTRASONIC_TRIG_PIN, OUTPUT);
   pinMode(ULTRASONIC_ECHO_PIN, INPUT);
+}
 
-  /**
-   * @brief Arduino setup function
-   *
-   */
-  void setup()
-  {
-    // Put your setup code here, to run once:
-    Serial.begin(9600);
+/**
+ * @brief Arduino setup function
+ *
+ */
+void setup()
+{
+  // Put your setup code here, to run once:
+  Serial.begin(9600);
 
-    Serial.print("Frecvența CPU-ului: ");
-    Serial.print(F_CPU);
-    Serial.println(" Hz");
+  // SET pins mode OUTPUT/INPUT
+  setPinsMode();
 
-    // SET pins mode OUTPUT/INPUT
-    setPinsMode();
-
-    delay(3000);
-  }
+  delay(3000);
+}
