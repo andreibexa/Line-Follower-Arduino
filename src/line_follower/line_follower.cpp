@@ -13,12 +13,10 @@ uint8_t total_inactive_line_sensor;
  */
 void activateLineFollowerMode()
 {
-  // Get calibrated sensor values returned in the sensors array, along with the
-  // line position, which will range from 0 to 1500, with 1000 corresponding to
-  // a position under the middle sensor.
-  int current_position = readLinePosition();
+  // Get IR sensor position
+  int16_t current_position = readLinePosition();
 
-  while (current_position != -1)
+  while (current_position != 0)
   {
     calculatePID(current_position);
 
@@ -45,9 +43,9 @@ void calculatePID(int current_position)
 {
   uint8_t base_speed = 200;
   uint8_t max_speed = 255;
-  static int16_t last_error = 0;
-  float Kp = 0.29;
+  float Kp = 0.38;
   float Kd = 0;
+  static int16_t last_error = 0;
 
   // Calculate the error as the difference between the desired position (1000) and the current position
   int16_t error = 1000 - current_position;
@@ -103,10 +101,11 @@ void restorePosition(uint8_t motor_left_speed, uint8_t motor_right_speed)
 
 /**
  * @brief Reads the line position using the IR sensors.
- *
+ * The returned value will range from 0 to 1500, with 1000 corresponding to
+ * a position under the middle sensor.
  * @return Position value (500, 1000, 1500)
  */
-unsigned int readLinePosition()
+uint16_t readLinePosition()
 {
   // Read the IR sensors each 2500 micro seconds
   unsigned long interval = 1;
@@ -130,6 +129,12 @@ unsigned int readLinePosition()
   // to the line over the middle sensor
 
   total_inactive_line_sensor = line_sensor_values[0] + line_sensor_values[1] + line_sensor_values[2];
+
+  // Finish line, all sensors detect the black line
+  if (total_inactive_line_sensor == 0)
+  {
+    return 0;
+  }
 
   uint16_t position = (2000 * line_sensor_values[2] + 1000 * line_sensor_values[1] +
                        0 * line_sensor_values[0]) /

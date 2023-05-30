@@ -33,7 +33,7 @@ void restorePosition(uint8_t motor_left_speed, uint8_t motor_right_speed);
  *
  * @return Position value (500, 1000, 1500)
  */
-unsigned int readLinePosition();
+uint16_t readLinePosition();
 
 /**
  * @brief Serial prints the line and motor positions.
