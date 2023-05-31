@@ -5,5 +5,5 @@
  *
  * @return distance The distance in centimeters.
  */
-float detectObstacle();
+float getDistance();
 #endif // SRC_OBSTACLE_DETECTOR_OBSTACLE_DETECTOR_H_

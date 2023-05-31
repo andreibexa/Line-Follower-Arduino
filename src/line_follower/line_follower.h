@@ -36,6 +36,13 @@ void restorePosition(uint8_t motor_left_speed, uint8_t motor_right_speed);
 uint16_t readLinePosition();
 
 /**
+ * @brief Avoid obstacle
+ *
+ * @param min_obstacle_distance Avoid obstacle if the distance is less than min_obstacle_distance
+ */
+void avoidObstacle(uint8_t min_obstacle_distance);
+
+/**
  * @brief Serial prints the line and motor positions.
  *
  */

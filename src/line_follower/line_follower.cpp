@@ -2,10 +2,11 @@
 #include <pins_line_follower.h>
 #include "line_follower/line_follower.h"
 #include "line_follower/control_direction.h"
+#include "obstacle_detector/obstacle_detector.h"
 
 const uint8_t line_sensor_count = 3; // Number of line sensors
 uint8_t line_sensor_values[line_sensor_count];
-uint8_t total_inactive_line_sensor;
+uint8_t num_non_detected_line_sensor;
 
 /**
  * @brief Activates the line follower mode
@@ -13,15 +14,21 @@ uint8_t total_inactive_line_sensor;
  */
 void activateLineFollowerMode()
 {
-  // Get IR sensor position
   int16_t current_position = readLinePosition();
 
-  while (current_position != 0)
+  // loop while reading the line
+  do
   {
+    // Avoid obstacle closer than 30 cm
+    avoidObstacle(30);
+
+    // Get IR sensor position
+    current_position = readLinePosition();
+
+    // Follow the line
     calculatePID(current_position);
 
-    current_position = readLinePosition();
-  }
+  } while (current_position != 0);
 
   deactivateLineFollowerMode();
 }
@@ -32,7 +39,7 @@ void activateLineFollowerMode()
  */
 void deactivateLineFollowerMode()
 {
-  controlDirection(STOP_SLOW, 0);
+  setDirection(STOP_SLOW, 0);
 }
 
 /**
@@ -43,7 +50,7 @@ void calculatePID(int current_position)
 {
   uint8_t base_speed = 200;
   uint8_t max_speed = 255;
-  float Kp = 0.38;
+  float Kp = 0.40;
   float Kd = 0;
   static int16_t last_error = 0;
 
@@ -61,7 +68,7 @@ void calculatePID(int current_position)
   uint8_t motor_right_speed = constrain(base_speed + pid, 0, max_speed);
 
   // If the line is not detected by any sensor, turn tight to to last known position
-  /*   if (total_inactive_line_sensor == line_sensor_count && current_position != 1000)
+  /*   if (num_non_detected_line_sensor == line_sensor_count && current_position != 1000)
     {
       restorePosition(motor_left_speed, motor_right_speed);
       return;
@@ -107,8 +114,8 @@ void restorePosition(uint8_t motor_left_speed, uint8_t motor_right_speed)
  */
 uint16_t readLinePosition()
 {
-  // Read the IR sensors each 2500 micro seconds
-  unsigned long interval = 1;
+  // Read the IR sensors each 1500 micro seconds
+  unsigned long interval = 1500;
   static unsigned long previousTime = 0;
   unsigned long currentTime = micros();
 
@@ -128,24 +135,24 @@ uint16_t readLinePosition()
   // position will range from 1500 to 3000, with 1500 corresponding
   // to the line over the middle sensor
 
-  total_inactive_line_sensor = line_sensor_values[0] + line_sensor_values[1] + line_sensor_values[2];
+  num_non_detected_line_sensor = line_sensor_values[0] + line_sensor_values[1] + line_sensor_values[2];
 
-  // Finish line, all sensors detect the black line
-  if (total_inactive_line_sensor == 0)
+  // The finish line, all sensors detect the black line
+  if (num_non_detected_line_sensor == 0)
   {
     return 0;
   }
 
   uint16_t position = (2000 * line_sensor_values[2] + 1000 * line_sensor_values[1] +
                        0 * line_sensor_values[0]) /
-                      total_inactive_line_sensor;
+                      num_non_detected_line_sensor;
 
   // Remembers where the sensor saw the line,
   // so if you ever lose the line to the left or the right,
   // its line position will continue to indicate the direction
   // you need to go to reacquire the line
 
-  if (total_inactive_line_sensor == line_sensor_count)
+  if (num_non_detected_line_sensor == line_sensor_count)
   {
     position = last_position;
   }
@@ -153,6 +160,54 @@ uint16_t readLinePosition()
   last_position = position;
 
   return position;
+}
+
+/**
+ * @brief Avoid obstacle
+ *
+ * @param min_obstacle_distance Avoid obstacle if the distance is less than min_obstacle_distance
+ */
+void avoidObstacle(uint8_t min_obstacle_distance)
+{
+  uint16_t current_position;
+
+  if (getDistance() < min_obstacle_distance)
+  {
+    delay(10);
+    current_position = readLinePosition();
+    // Turn right till the left IR sensor is under the line
+    while (current_position != 500)
+    {
+      setDirection(RIGHT_TIGHT_FORWARD, 200);
+      current_position = readLinePosition();
+    }
+
+    // Turn right
+    setDirection(RIGHT_WIDE_FORWARD, 200);
+    delay(100);
+
+    // Forward at 45 degree
+    setDirection(FORWARD, 255);
+    delay(900);
+
+    // Turn left
+    setDirection(LEFT_WIDE_FORWARD, 200);
+    delay(900);
+
+    readLinePosition();
+    // Go forward at 45 degree
+    while (num_non_detected_line_sensor == line_sensor_count)
+    {
+      setDirection(FORWARD, 255);
+
+      // Refresh num_non_detected_line_sensor
+      readLinePosition();
+    }
+
+    // Stop if the line is detected
+    setDirection(STOP_FAST, 255);
+    delay(800);
+  }
 }
 
 /**
@@ -168,6 +223,9 @@ void SerialPrintPosition(uint16_t current_position, uint8_t motor_left_speed, ui
   }
 
   Serial.print(current_position);
+  Serial.print("\t");
+
+  Serial.print(num_non_detected_line_sensor);
   Serial.print("\t");
 
   Serial.print(motor_left_speed);

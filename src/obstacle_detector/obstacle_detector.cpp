@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <limits.h>
 #include <pins_line_follower.h>
 
 /**
@@ -6,10 +7,11 @@
  *
  * @return distance The distance in centimeters.
  */
-float detectObstacle()
+float getDistance()
 {
+  static float distance;
   static unsigned long previousMillis = 0; // Variable to store the previous time
-  const long interval = 100;               // Wait interval between measurements (in milliseconds)
+  const long interval = 50;                // Wait interval between measurements (in milliseconds)
 
   unsigned long currentMillis = millis(); // Get the current time
 
@@ -21,7 +23,7 @@ float detectObstacle()
     // Send an ultrasonic signal
     digitalWrite(ULTRASONIC_TRIG_PIN, LOW);
     delayMicroseconds(2);
-    digitalWrite(ULTRASONIC_ECHO_PIN, HIGH);
+    digitalWrite(ULTRASONIC_TRIG_PIN, HIGH);
     delayMicroseconds(10);
     digitalWrite(ULTRASONIC_TRIG_PIN, LOW);
 
@@ -30,8 +32,8 @@ float detectObstacle()
 
     // Calculate the distance in centimeters
     // The speed of sound is approximately 0.0343 cm/microsecond
-    float distance = duration * 0.0343 / 2;
-
-    return distance;
+    distance = duration * 0.0343 / 2;
   }
+
+  return distance;
 }
