@@ -1,5 +1,5 @@
-#ifndef SRC_LINE_FOLLOWER_CONTROL_DIRECTION_H_
-#define SRC_LINE_FOLLOWER_CONTROL_DIRECTION_H_
+#ifndef SRC_JADE_UNOPLUS_LINE_FOLLOWER_CONTROL_DIRECTION_H_
+#define SRC_JADE_UNOPLUS_LINE_FOLLOWER_CONTROL_DIRECTION_H_
 
 // Enumeration for different directions
 enum Direction
@@ -34,4 +34,4 @@ void temporizedDirection(uint8_t direction, uint8_t speed, int16_t runTime);
  */
 void setDirection(uint8_t direction, uint8_t speed);
 
-#endif // SRC_LINE_FOLLOWER_CONTROL_DIRECTION_H_
+#endif // SRC_JADE_UNOPLUS_LINE_FOLLOWER_CONTROL_DIRECTION_H_

@@ -1,4 +1,5 @@
-#include <pins_line_follower.h>
+#include <pins_jade_unoplus.h>
+#include "commander/commander.h"
 
 /**
  * @brief Initialize Pin Mode
@@ -31,8 +32,16 @@ void setup()
   // Put your setup code here, to run once:
   Serial.begin(9600);
 
+  // Wait for the serial port to open (if using USB)
+  while (!Serial)
+  {
+    ;
+  }
+  Serial.println("Serial initialized");
+
   // SET pins mode OUTPUT/INPUT
   setPinsMode();
 
-  delay(3000);
+  // Initialize Serial Commander
+  setup_serial_commander();
 }

@@ -1,32 +1,32 @@
-#ifndef SRC_LINE_FOLLOWER_LINE_FOLLOWER_H_
-#define SRC_LINE_FOLLOWER_LINE_FOLLOWER_H_
+#ifndef SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
+#define SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 
 #include <Arduino.h>
-#include <pins_line_follower.h>
+#include <pins_jade_unoplus.h>
 
 /**
- * @brief Activate line follower mode
+ * @brief Enable the Line Follower mode
  *
  */
-void activateLineFollowerMode();
+void enableLineFollowerMode();
 
 /**
- * @brief Disable the Line follower mode
+ * @brief Disable the Line Follower mode
  *
  */
-void deactivateLineFollowerMode();
+void disableLineFollowerMode();
 
 /**
  * @brief This function calculate the line position error using a PID control algorithm.
  *
  */
-void calculatePID(int current_position);
+void calculatePID(uint16_t current_position);
 
 /**
  * Out of line. Turn back to the last known position
  *
  */
-void restorePosition(uint8_t motor_left_speed, uint8_t motor_right_speed);
+void restorePosition(int16_t motor_left_speed, int16_t motor_right_speed);
 
 /**
  * @brief Reads the line position using the IR sensors.
@@ -46,6 +46,6 @@ void avoidObstacle(uint8_t min_obstacle_distance);
  * @brief Serial prints the line and motor positions.
  *
  */
-void SerialPrintPosition(uint16_t current_position, uint8_t motor_left_speed, uint8_t motor_right_speed);
+void SerialPrintPosition(uint16_t current_position, int16_t motor_left_speed, int16_t motor_right_speed);
 
-#endif // SRC_LINE_FOLLOWER_LINE_FOLLOWER_H_
+#endif // SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_

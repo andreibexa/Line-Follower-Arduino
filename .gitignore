@@ -4,4 +4,5 @@
 .vscode/launch.json
 .vscode/ipch
 .vscode/settings.json
+src/esp32/secrets.h
 compile_commands.json

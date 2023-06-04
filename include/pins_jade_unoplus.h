@@ -1,5 +1,5 @@
-#ifndef PINS_LINE_FOLLOWER_H_
-#define PINS_LINE_FOLLOWER_H_
+#ifndef PINS_JADE_UNOPLUS_H_
+#define PINS_JADE_UNOPLUS_H_
 
 #include <Arduino.h>
 
@@ -18,4 +18,4 @@
 // Ultrasonic Sensor Module - HC-SR04
 #define ULTRASONIC_TRIG_PIN 2 // TRIG
 #define ULTRASONIC_ECHO_PIN 3 // ECHO
-#endif                        // PINS_LINE_FOLLOWER_H_
+#endif                        // PINS_JADE_UNOPLUS_H_
