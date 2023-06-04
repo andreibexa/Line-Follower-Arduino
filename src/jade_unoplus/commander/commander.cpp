@@ -1,4 +1,5 @@
 #include "jade_unoplus/commander/commander.h"
+#include "jade_unoplus/commander/serial_handler.h"
 
 Commander cmd;
 
@@ -12,7 +13,7 @@ void setup_serial_commander()
   cmd.commandPrompt(ON);
 
   //  Start Commander on Serial
-  // cmd.begin(&Serial, commands, sizeof(commands));
+  cmd.begin(&Serial, commands, sizeof(commands));
 
   // Echo incoming characters to theoutput port
   cmd.echo(true);

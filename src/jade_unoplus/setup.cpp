@@ -1,5 +1,6 @@
 #include <pins_jade_unoplus.h>
 #include "commander/commander.h"
+#include <EEPROM.h>
 
 /**
  * @brief Initialize Pin Mode

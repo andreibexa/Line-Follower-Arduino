@@ -1,8 +1,6 @@
 #ifndef SRC_JADE_UNOPLUS_COMMANDER_COMMANDER_H_
 #define SRC_JADE_UNOPLUS_COMMANDER_COMMANDER_H_
 #include <Commander.h>
-#include "jade_unoplus/commander/commander.h"
-#include "jade_unoplus/line_follower/line_follower.h"
 
 extern Commander cmd;
 

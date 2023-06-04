@@ -3,8 +3,9 @@
 #include "jade_unoplus/line_follower/line_follower.h"
 #include "jade_unoplus/line_follower/control_direction.h"
 #include "jade_unoplus/obstacle_detector/obstacle_detector.h"
+#include "jade_unoplus/eeprom_data/eeprom_data.h"
 
-const uint8_t line_sensor_count = 3; // Number of line sensors
+uint8_t const line_sensor_count = 3; // Number of line sensors
 uint8_t line_sensor_values[line_sensor_count];
 uint8_t num_non_detected_line_sensor;
 
@@ -48,11 +49,12 @@ void disableLineFollowerMode()
  */
 void calculatePID(uint16_t current_position)
 {
-  uint8_t min_speed = 0;
-  uint8_t max_speed = 220;
-  uint8_t base_speed = 180;
+  uint8_t min_speed = eeprom_settings.min_speed;
+  uint8_t base_speed = eeprom_settings.base_speed;
+  uint8_t max_speed = eeprom_settings.max_speed;
+
   // adjust Kp to get the best results for the line follower
-  float Kp = 0.38;
+  float Kp = eeprom_settings.kp;
   float Kd = 0;
   static int16_t last_error = 0;
 

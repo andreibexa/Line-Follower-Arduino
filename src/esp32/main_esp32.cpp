@@ -1,16 +1,20 @@
 
 #include <Arduino.h>
-// Arduino cloud
-#include "thingProperties.h"
-#include "wifi_manager/wifi_manager.h"
+
 #include <ArduinoIoTCloud.h>
+#include "esp32/thingProperties.h"
+#include "esp32/wifi_manager/wifi_manager.h"
+
 // Put your setup code here, to run once:
 void setup()
 {
   Serial.begin(9600);
 
-  // This delay gives the chance to wait for a Serial Monitor without blocking if none is found
-  delay(1500);
+  // Wait for the serial port to open (if using USB)
+  while (!Serial)
+  {
+    ;
+  }
 
   // Setup wifi manager
   setup_wifi_manager();
