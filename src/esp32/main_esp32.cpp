@@ -9,12 +9,10 @@
 void setup()
 {
   Serial.begin(9600);
+  Serial1.begin(9600, SERIAL_8N1, T0, T1);
 
   // Wait for the serial port to open (if using USB)
-  while (!Serial)
-  {
-    ;
-  }
+  while (!Serial){;}
 
   // Setup wifi manager
   setup_wifi_manager();

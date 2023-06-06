@@ -1,11 +1,9 @@
 #ifndef SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 #define SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 
-#include <Arduino.h>
-#include <pins_jade_unoplus.h>
 
 /**
- * @brief Enable the Line Follower mode
+ * @brief Enable Line Follower mode
  *
  */
 void enableLineFollowerMode();

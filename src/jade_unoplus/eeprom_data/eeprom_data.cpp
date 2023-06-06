@@ -1,6 +1,6 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 #include "jade_unoplus/eeprom_data/eeprom_data.h"
-#include "jade_unoplus/eeprom_data/commander.h"
 
 // Structure for EEPROM data
 EEPROM_settings eeprom_settings = {
@@ -15,10 +15,8 @@ EEPROM_settings eeprom_settings = {
  */
 void initializeEEPROM()
 {
-  EEPROM.begin();
-
   // Read the first byte from EEPROM
-  uint8_t firstByte = EEPROM.read(0);
+  byte firstByte = EEPROM.read(0);
 
   if (firstByte == 0xFF)
   {
@@ -27,32 +25,56 @@ void initializeEEPROM()
 
   // Get EEPROM data in eeprom_settings structure
   EEPROM.get(0, eeprom_settings);
+
+  // Transmit a command to the ESP32 using Serial1
+  Serial1.print("line_follower_mode ");
+  Serial1.println(0);
+  Serial1.print("min_speed ");
+  Serial1.println(eeprom_settings.min_speed);
+  Serial1.print("min_speed ");
+  Serial1.println(eeprom_settings.base_speed);
+  Serial1.print("base_speed ");
+  Serial1.println(eeprom_settings.max_speed);
+  Serial1.print("max_speed ");
+  Serial1.println(eeprom_settings.kp);
 }
 
 /**
- * @brief Save settings structure to EEPROM
+ * @brief Update settings structure to EEPROM
  *
  */
 void saveSettingsToEEPROM()
 {
   EEPROM.put(0, eeprom_settings);
+  Serial.println("Saving ...");
+  Serial.println(" ");
+  printEEPROMSettings();
+}
+
+/**
+ * @brief Get settings from EEPROM
+ *
+ */
+void getSettingsFromEEPROM() {
+  EEPROM.get(0, eeprom_settings);
 }
 
 /**
  * @brief Print all the elements of the EEPROM_settings structure.
- * Thank you ChatGPT 😎
  *
  */
-void printEEPROMSettings()
-{
-  uint8_t *ptr = reinterpret_cast<uint8_t *>(&eeprom_settings);
-  size_t size = sizeof(eeprom_settings);
+void printEEPROMSettings() {
 
-  for (size_t i = 0; i < size; ++i)
-  {
-    Serial.print("EEPROM ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(ptr[i]);
-  }
+  getSettingsFromEEPROM();
+
+  // Afișarea valorilor
+  Serial.println("EEPROM Settings:");
+  Serial.print("Min Speed: ");
+  Serial.println(eeprom_settings.min_speed);
+  Serial.print("Base Speed: ");
+  Serial.println(eeprom_settings.base_speed);
+  Serial.print("Max Speed: ");
+  Serial.println(eeprom_settings.max_speed);
+  Serial.print("Kp: ");
+  Serial.println(eeprom_settings.kp);
 }

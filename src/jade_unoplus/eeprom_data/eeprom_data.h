@@ -1,7 +1,7 @@
 #ifndef SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_
 #define SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_
 
-#include <EEPROM.h>
+#include <Arduino.h>
 
 struct EEPROM_settings
 {
@@ -33,6 +33,6 @@ void saveSettingsToEEPROM();
  * @brief Print all the elements of the EEPROM_settings structure.
  *
  */
-void printEEPROMSettings()
+void printEEPROMSettings();
 
 #endif // SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_

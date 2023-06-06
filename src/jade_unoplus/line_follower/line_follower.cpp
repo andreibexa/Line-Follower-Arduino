@@ -10,12 +10,13 @@ uint8_t line_sensor_values[line_sensor_count];
 uint8_t num_non_detected_line_sensor;
 
 /**
- * @brief Enable the Line Follower mode
+ * @brief Enable Line Follower mode
  *
  */
 void enableLineFollowerMode()
 {
   int16_t current_position = readLinePosition();
+  Serial.println("Enable Line Follower mode");
 
   // loop while reading the line
   do
@@ -41,6 +42,7 @@ void enableLineFollowerMode()
 void disableLineFollowerMode()
 {
   setDirection(STOP_SLOW, 0);
+  Serial.println("Disable Line Follower mode");
 }
 
 /**
@@ -54,7 +56,7 @@ void calculatePID(uint16_t current_position)
   uint8_t max_speed = eeprom_settings.max_speed;
 
   // adjust Kp to get the best results for the line follower
-  float Kp = eeprom_settings.kp;
+  float Kp =  eeprom_settings.kp;
   float Kd = 0;
   static int16_t last_error = 0;
 
