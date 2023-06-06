@@ -1,17 +1,14 @@
-#include <Arduino.h>
-#include <Commander.h>
-#include "esp32/commander/commander_handler.h"
 #include "esp32/commander/commander_setup.h"
 
 Commander cmd;
 
 // The command handler list for Serial Commander
 const commandList_t commands[] = {
-    {"line_follower_mode",  lineFollowerModeHandler,  "Line Follower mode (Enable/Disable)"},
-    {"min_speed",           minSpeedHandler,          "Min speed"},
-    {"base_speed",          baseSpeedHandler,         "Base speed"},
-    {"max_speed",           maxSpeedHandler,          "Max speed"},
-    {"kp",                  kpHandler,                "Kp factor for PID algorithm"},
+    {"line_follower_mode", lineFollowerModeHandler, "Line Follower mode (Enable/Disable)"},
+    {"min_speed", minSpeedHandler, "Min speed"},
+    {"base_speed", baseSpeedHandler, "Base speed"},
+    {"max_speed", maxSpeedHandler, "Max speed"},
+    {"kp", kpHandler, "Kp factor for PID algorithm"},
 };
 
 /**
@@ -20,10 +17,13 @@ const commandList_t commands[] = {
  */
 void setup_serial_commander()
 {
-  while(!Serial){;}
+  while (!Serial)
+  {
+    ;
+  }
   initialiseCommander(); //  start Commander on Serial
-  cmd.commandPrompt(ON);  //enable the command prompt
-  cmd.echo(true);                                 //Echo incoming characters to theoutput port
+  cmd.commandPrompt(ON); // enable the command prompt
+  cmd.echo(true);        // Echo incoming characters to theoutput port
   Serial.println("Hello: Type 'help' to get help");
   cmd.printCommandPrompt();
 }
@@ -32,10 +32,10 @@ void setup_serial_commander()
  * @brief Intialise Commander
  *
  */
-void initialiseCommander(){
+void initialiseCommander()
+{
   cmd.begin(&Serial, commands, sizeof(commands));
 }
-
 
 /**
  * @brief Loop serial commander

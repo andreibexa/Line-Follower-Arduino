@@ -1,4 +1,3 @@
-#include <WiFiManager.h> // https://github.com/tzapu/WiFiManager
 #include "esp32/wifi_manager/wifi_manager.h"
 
 // WiFiManager, Local intialization. Once its business is done, there is no need to keep it around

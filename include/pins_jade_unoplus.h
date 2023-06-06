@@ -14,13 +14,17 @@
 #define MOTOR_LEFT_BACKWARD_PIN 10 // M2(B) - PWM PIN
 
 // Serial RX and TX
-#define RX_PIN 7  // RX PIN
-#define TX_PIN 8  // TX PIN
+#define RX_COM_PIN 7 // RX PIN
+#define TX_COM_PIN 8 // TX PIN
 
 // 3 Channel Red IR Infrared Tracking Sensor Module - CTRT5000
-#define IR_TRACKING_SENSOR_RIGHT_PIN 11   // OTL
-#define IR_TRACKING_SENSOR_CENTER_PIN 12  // OTC
-#define IR_TRACKING_SENSOR_LEFT_PIN 13    // OTR
+#define IR_TRACKING_SENSOR_RIGHT_PIN 11  // OTL
+#define IR_TRACKING_SENSOR_CENTER_PIN 12 // OTC
+#define IR_TRACKING_SENSOR_LEFT_PIN 13   // OTR
 
+// LED Matrix display module - MAX7219
+#define DIN A0
+#define CLK A2
+#define CS A1
 
-#endif                        // PINS_JADE_UNOPLUS_H_
+#endif // PINS_JADE_UNOPLUS_H_

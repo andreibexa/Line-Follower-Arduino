@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "jade_unoplus/eeprom_data/eeprom_data.h"
+#include <SoftwareSerial.h>
+#include "jade_unoplus/SerialCommunication.h"
 
 // Structure for EEPROM data
 EEPROM_settings eeprom_settings = {
@@ -26,17 +28,17 @@ void initializeEEPROM()
   // Get EEPROM data in eeprom_settings structure
   EEPROM.get(0, eeprom_settings);
 
-  // Transmit a command to the ESP32 using Serial1
-  Serial1.print("line_follower_mode ");
-  Serial1.println(0);
-  Serial1.print("min_speed ");
-  Serial1.println(eeprom_settings.min_speed);
-  Serial1.print("min_speed ");
-  Serial1.println(eeprom_settings.base_speed);
-  Serial1.print("base_speed ");
-  Serial1.println(eeprom_settings.max_speed);
-  Serial1.print("max_speed ");
-  Serial1.println(eeprom_settings.kp);
+  // Transmit a command to the ESP32 using SerialCom
+  SerialCom.print("line_follower_mode ");
+  SerialCom.println(0);
+  SerialCom.print("min_speed ");
+  SerialCom.println(eeprom_settings.min_speed);
+  SerialCom.print("min_speed ");
+  SerialCom.println(eeprom_settings.base_speed);
+  SerialCom.print("base_speed ");
+  SerialCom.println(eeprom_settings.max_speed);
+  SerialCom.print("max_speed ");
+  SerialCom.println(eeprom_settings.kp);
 }
 
 /**
@@ -55,7 +57,8 @@ void saveSettingsToEEPROM()
  * @brief Get settings from EEPROM
  *
  */
-void getSettingsFromEEPROM() {
+void getSettingsFromEEPROM()
+{
   EEPROM.get(0, eeprom_settings);
 }
 
@@ -63,7 +66,8 @@ void getSettingsFromEEPROM() {
  * @brief Print all the elements of the EEPROM_settings structure.
  *
  */
-void printEEPROMSettings() {
+void printEEPROMSettings()
+{
 
   getSettingsFromEEPROM();
 

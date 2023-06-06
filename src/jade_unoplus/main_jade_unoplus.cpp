@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <pins_jade_unoplus.h>
-#include "commander/commander_setup.h"
+#include "jade_unoplus/commander/commander_setup.h"
+#include <SoftwareSerial.h>
+#include "jade_unoplus/SerialCommunication.h"
+#include "jade_unoplus/led_matrix/led_matrix.h"
 
 /**
  * @brief Initialize Pin Mode
@@ -32,10 +35,16 @@ void setup()
 {
   // Put your setup code here, to run once:
   Serial.begin(9600);
-  Serial1.begin(9600, SERIAL_8N1, RX_PIN, TX_PIN);
+
+  // Setup SerialCom to communicate with ESP32
+  SoftwareSerial SerialCom(RX_COM_PIN, TX_COM_PIN);
+  SerialCom.begin(9600);
 
   // Wait for the serial port to open (if using USB)
-  while (!Serial) {;}
+  while (!Serial)
+  {
+    ;
+  }
 
   Serial.println("Serial initialized");
 
@@ -44,8 +53,10 @@ void setup()
 
   // Initialize Serial Commander
   setup_serial_commander();
-}
 
+  // Matrix setup
+  setup_matrix();
+}
 
 /**
  * @brief Arduino main loop
@@ -55,4 +66,7 @@ void loop()
 {
   // Loop serial commander
   loop_serial_commander();
+
+  // Matrix loop
+  loop_matrix();
 }

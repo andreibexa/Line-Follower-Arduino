@@ -1,8 +1,6 @@
 
 
-#include "esp32/thingProperties.h"
 #include "esp32/commander/commander_handler.h"
-#include <Commander.h>
 
 /**
  * @brief Update line_follower_mode

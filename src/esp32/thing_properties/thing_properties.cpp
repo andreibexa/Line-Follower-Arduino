@@ -1,9 +1,6 @@
-#ifndef SRC_ESP32_THINGPROPERTIES_H_
-#define SRC_ESP32_THINGPROPERTIES_H_
+#include <esp32/thing_properties/thing_properties.h>
 
 // The bellow code is adapted from Arduino IoT Cloud - https://cloud.arduino.com
-#include <ArduinoIoTCloud.h>
-#include "esp32/secrets.h"
 
 bool line_follower_mode = false;
 int base_speed;
@@ -20,8 +17,8 @@ void onLineFollowerModeChange()
   Serial.print("line_follower_mode ");
   Serial.println(line_follower_mode);
 
-  Serial1.print("line_follower_mode ");
-  Serial1.println(line_follower_mode);
+  Serial2.print("line_follower_mode ");
+  Serial2.println(line_follower_mode);
 }
 
 /*
@@ -34,8 +31,8 @@ void onMaxSpeedChange()
   Serial.print("max_speed ");
   Serial.println(max_speed);
 
-  Serial1.print("max_speed ");
-  Serial1.println(max_speed);
+  Serial2.print("max_speed ");
+  Serial2.println(max_speed);
 }
 
 /*
@@ -48,8 +45,8 @@ void onBaseSpeedChange()
   Serial.print("base_speed ");
   Serial.println(base_speed);
 
-  Serial1.print("base_speed ");
-  Serial1.println(base_speed);
+  Serial2.print("base_speed ");
+  Serial2.println(base_speed);
 }
 
 /*
@@ -62,8 +59,8 @@ void onMinSpeedChange()
   Serial.print("min_speed ");
   Serial.println(min_speed);
 
-  Serial1.print("min_speed ");
-  Serial1.println(min_speed);
+  Serial2.print("min_speed ");
+  Serial2.println(min_speed);
 }
 
 /*
@@ -76,8 +73,8 @@ void onKpChange()
   Serial.print("kp ");
   Serial.println(kp);
 
-  Serial1.print("kp ");
-  Serial1.println(kp);
+  Serial2.print("kp ");
+  Serial2.println(kp);
 }
 
 /**
@@ -103,5 +100,3 @@ void initProperties()
 // Wifi manager extension handles the preferred connection method for Arduino IoT.
 // This line does not affect the wifi connection.
 WiFiConnectionHandler ArduinoIoTPreferredConnection("none", "none");
-
-#endif // SRC_ESP32_THINGPROPERTIES_H_

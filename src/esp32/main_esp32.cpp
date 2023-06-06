@@ -1,18 +1,23 @@
 
 #include <Arduino.h>
-
+#include <HardwareSerial.h>
 #include <ArduinoIoTCloud.h>
-#include "esp32/thingProperties.h"
+#include "esp32/thing_properties/thing_properties.h"
 #include "esp32/wifi_manager/wifi_manager.h"
 
 // Put your setup code here, to run once:
 void setup()
 {
   Serial.begin(9600);
-  Serial1.begin(9600, SERIAL_8N1, T0, T1);
+
+  // Setup Serial2 to communicate with Jade Uno+
+  Serial2.begin(9600, SERIAL_8N1, A10, A11);
 
   // Wait for the serial port to open (if using USB)
-  while (!Serial){;}
+  while (!Serial)
+  {
+    ;
+  }
 
   // Setup wifi manager
   setup_wifi_manager();
