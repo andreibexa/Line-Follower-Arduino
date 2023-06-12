@@ -1,8 +1,0 @@
-#ifndef SRC_JADE_UNOPLUS_SERIALCOMMUNICATION_H_
-#define SRC_JADE_UNOPLUS_SERIALCOMMUNICATION_H_
-
-#include <SoftwareSerial.h>
-
-extern SoftwareSerial SerialCom;
-
-#endif // SRC_JADE_UNOPLUS_SERIALCOMMUNICATION_H_
