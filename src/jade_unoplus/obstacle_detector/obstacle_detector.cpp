@@ -1,23 +1,25 @@
-#include <Arduino.h>
-#include <pins_jade_unoplus.h>
+#include "jade_unoplus/obstacle_detector/obstacle_detector.h"
 
 /**
  * @brief Detects obstacles using an ultrasonic sensor and returns the distance.
  *
  * @return distance The distance in centimeters.
  */
-float getDistance()
-{
+float getDistance() {
   static float distance;
-  static unsigned long previousMillis = 0; // Variable to store the previous time
-  const long interval = 50;                // Wait interval between measurements (in milliseconds)
+  // Variable to store the previous time
+  static unsigned long previousMillis = 0;
 
-  unsigned long currentMillis = millis(); // Get the current time
+  // Wait interval between measurements (in milliseconds)
+  const long interval = 50;
+
+  // Get the current time
+  unsigned long currentMillis = millis();
 
   // Check if the interval has passed
-  if (currentMillis - previousMillis >= interval)
-  {
-    previousMillis = currentMillis; // Update the previous time
+  if (currentMillis - previousMillis >= interval) {
+    // Update the previous time
+    previousMillis = currentMillis;
 
     // Send an ultrasonic signal
     digitalWrite(ULTRASONIC_TRIG_PIN, LOW);

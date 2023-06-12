@@ -1,16 +1,15 @@
-#include <Arduino.h>
-#include <pins_jade_unoplus.h>
-#include "jade_unoplus/commander/commander_setup.h"
-#include <SoftwareSerial.h>
-#include "jade_unoplus/SerialCommunication.h"
+#include "jade_unoplus/eeprom_data/eeprom_data.h"
+#include "jade_unoplus/jade_transfer/jade_transfer.h"
 #include "jade_unoplus/led_matrix/led_matrix.h"
+#include "jade_unoplus/line_follower/line_follower.h"
+#include "jade_unoplus/pins_jade_unoplus.h"
+#include <Arduino.h>
 
 /**
  * @brief Initialize Pin Mode
  *
  */
-void setPinsMode()
-{
+void setPinsMode() {
   // Dual-Channel H-Bridge Motor Driver Module
   pinMode(MOTOR_RIGHT_FORWARD_PIN, OUTPUT);
   pinMode(MOTOR_RIGHT_BACKWARD_PIN, OUTPUT);
@@ -31,42 +30,34 @@ void setPinsMode()
  * @brief Arduino setup function
  *
  */
-void setup()
-{
+void setup() {
   // Put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
 
-  // Setup SerialCom to communicate with ESP32
-  SoftwareSerial SerialCom(RX_COM_PIN, TX_COM_PIN);
-  SerialCom.begin(9600);
+  // Initialize line follower settings with default settings
+  initializeLineFollowerSettings();
 
-  // Wait for the serial port to open (if using USB)
-  while (!Serial)
-  {
-    ;
-  }
+  // setup the Jade UnoPlus Serial Transfer
+  setupSerialTransfer();
 
-  Serial.println("Serial initialized");
+  // Initialize EEPROM
+  initializeEEPROM();
 
-  // SET pins mode OUTPUT/INPUT
+  // SET pins mode INPUT/OUTPUT
   setPinsMode();
 
-  // Initialize Serial Commander
-  setup_serial_commander();
-
   // Matrix setup
-  setup_matrix();
+  setupMatrix();
 }
 
 /**
  * @brief Arduino main loop
  *`
  */
-void loop()
-{
-  // Loop serial commander
-  loop_serial_commander();
-
+void loop() {
   // Matrix loop
-  loop_matrix();
+  loopMatrix();
+
+  // Loop Serial Transfer
+  loopSerialTransfer();
 }

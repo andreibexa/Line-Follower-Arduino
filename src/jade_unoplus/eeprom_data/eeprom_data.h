@@ -1,17 +1,10 @@
 #ifndef SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_
 #define SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_
 
+#include "line_follower_struct_settings.h"
 #include <Arduino.h>
-
-struct EEPROM_settings
-{
-  uint8_t min_speed;
-  uint8_t base_speed;
-  uint8_t max_speed;
-  float kp;
-};
-
-extern EEPROM_settings eeprom_settings;
+#include <EEPROM.h>
+#include <SoftwareSerial.h>
 
 /**
  * @brief Initialize EEPROM
@@ -19,20 +12,21 @@ extern EEPROM_settings eeprom_settings;
 void initializeEEPROM();
 
 /**
- * @brief Read EEPROM settings
- */
-void readEEPROMSettings();
-
-/**
- * @brief Writes the settings data to the EEPROM.
+ * @brief Save lineFollowerSettings to EEPROM
  *
  */
-void saveSettingsToEEPROM();
+void saveLineFollowerSettings();
 
 /**
- * @brief Print all the elements of the EEPROM_settings structure.
+ * @brief Get lineFollowerSettings from EEPROM
+ *
+ */
+void getLineFollowerSettings();
+
+/**
+ * @brief Print all the elements of the lineFollowerSettings structure.
  *
  */
 void printEEPROMSettings();
 
-#endif // SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_
+#endif  // SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_

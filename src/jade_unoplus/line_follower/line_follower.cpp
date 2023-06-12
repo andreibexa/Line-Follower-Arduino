@@ -1,36 +1,42 @@
-#include <Arduino.h>
-#include <pins_jade_unoplus.h>
 #include "jade_unoplus/line_follower/line_follower.h"
-#include "jade_unoplus/line_follower/control_direction.h"
-#include "jade_unoplus/obstacle_detector/obstacle_detector.h"
-#include "jade_unoplus/eeprom_data/eeprom_data.h"
 
-uint8_t const line_sensor_count = 3; // Number of line sensors
-uint8_t line_sensor_values[line_sensor_count];
-uint8_t num_non_detected_line_sensor;
+uint8_t const lineSensorCount = 3;  // Number of line sensors
+uint8_t lineSensorValues[lineSensorCount];
+uint8_t numNonDetectedLineSensor;
+
+STRUCT_LINE_FOLLOWER_SETTINGS lineFollowerSettings;
+
+// Function to initialize the line follower settings with default values
+void initializeLineFollowerSettings() {
+  lineFollowerSettings.lineFollowerMode = DEFAULT_MODE;
+  lineFollowerSettings.minSpeed = DEFAULT_MIN_SPEED;
+  lineFollowerSettings.baseSpeed = DEFAULT_BASE_SPEED;
+  lineFollowerSettings.maxSpeed = DEFAULT_MAX_SPEED;
+  lineFollowerSettings.kp = DEFAULT_KP;
+}
 
 /**
  * @brief Enable Line Follower mode
  *
  */
-void enableLineFollowerMode()
-{
-  int16_t current_position = readLinePosition();
-  Serial.println("Enable Line Follower mode");
+void enableLineFollowerMode() {
+  // Send the line follower settings to cloud
+  transmitLineFollowerSettings();
 
+  Serial.println("Enable the line follower mode");
+
+  int16_t currentPosition = readLinePosition();
   // loop while reading the line
-  do
-  {
+  do {
     // Avoid obstacle closer than 30 cm
     avoidObstacle(30);
 
     // Get IR sensor position
-    current_position = readLinePosition();
+    currentPosition = readLinePosition();
 
-    // Follow the line
-    calculatePID(current_position);
-
-  } while (current_position != 0);
+    // Calculate error position and follow the line
+    calculatePID(currentPosition);
+  } while (currentPosition != 0);
 
   disableLineFollowerMode();
 }
@@ -39,76 +45,82 @@ void enableLineFollowerMode()
  * @brief Disable the Line Follower mode
  *
  */
-void disableLineFollowerMode()
-{
+void disableLineFollowerMode() {
   setDirection(STOP_SLOW, 0);
-  Serial.println("Disable Line Follower mode");
+  lineFollowerSettings.lineFollowerMode = false;
+
+  // Send command to ESP32 to disable the lineFollowerMode in Arduino Cloud
+  transmitLineFollowerSettings();
+
+  Serial.println("Disable the  line follower mode");
 }
 
 /**
- * @brief This function calculates the line position error using a PID control algorithm.
+ * @brief This function calculates the line position error using a PID control
+ * algorithm.
  *
  */
-void calculatePID(uint16_t current_position)
-{
-  uint8_t min_speed = eeprom_settings.min_speed;
-  uint8_t base_speed = eeprom_settings.base_speed;
-  uint8_t max_speed = eeprom_settings.max_speed;
+void calculatePID(uint16_t currentPosition) {
+  uint8_t minSpeed = lineFollowerSettings.minSpeed;
+  uint8_t baseSpeed = lineFollowerSettings.baseSpeed;
+  uint8_t maxSpeed = lineFollowerSettings.maxSpeed;
 
   // adjust Kp to get the best results for the line follower
-  float Kp =  eeprom_settings.kp;
+  float Kp = lineFollowerSettings.kp;
   float Kd = 0;
-  static int16_t last_error = 0;
+  static int16_t lastError = 0;
 
-  // Calculate the error as the difference between the desired position (1000) and the current position
-  int16_t error = 1000 - current_position;
+  // Calculate the error as the difference between the desired position (1000)
+  // and the current position
+  int16_t error = 1000 - currentPosition;
 
-  // Set the motor speed based on proportional, integral, and derivative PID terms.
-  float pid = Kp * error + Kd * (error - last_error);
+  // Set the motor speed based on proportional, integral, and derivative PID
+  // terms.
+  float pid = Kp * error + Kd * (error - lastError);
 
   // Record the current error for the next iteration
-  last_error = error;
+  lastError = error;
 
   // Calculate the motor speeds based on the PID control signal
-  int16_t motor_left_speed = constrain(base_speed - pid, min_speed, max_speed);
-  int16_t motor_right_speed = constrain(base_speed + pid, min_speed, max_speed);
+  int16_t motorLeftSpeed = constrain(baseSpeed - pid, minSpeed, maxSpeed);
+  int16_t motorRightSpeed = constrain(baseSpeed + pid, minSpeed, maxSpeed);
 
-  analogWrite(MOTOR_LEFT_FORWARD_PIN, motor_left_speed);
+  analogWrite(MOTOR_LEFT_FORWARD_PIN, motorLeftSpeed);
   digitalWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
-  analogWrite(MOTOR_RIGHT_FORWARD_PIN, motor_right_speed);
+  analogWrite(MOTOR_RIGHT_FORWARD_PIN, motorRightSpeed);
   digitalWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
 
-  // If the line is not detected by any sensor, turn tight to to last known position
-  /*   if (num_non_detected_line_sensor == line_sensor_count && current_position != 1000)
-    {
-      restorePosition(motor_left_speed, motor_right_speed);
-      return;
-    }
-   */
+  // If the line is not detected by any sensor, turn tight to to last known
+  // position
+  /*   if (numNonDetectedLineSensor == lineSensorCount &&
+      currentPosition
+      != 1000)
+      {
+        restorePosition(motorLeftSpeed, motorRightSpeed);
+        return;
+      }
+     */
 
-  // SerialPrintPosition(current_position, motor_left_speed, motor_right_speed);
+  // SerialPrintPosition(currentPosition, motorLeftSpeed,
+  // motorRightSpeed);
 }
 
 /**
  * Out of line. Turn back to the last known position
  *
  */
-void restorePosition(int16_t motor_left_speed, int16_t motor_right_speed)
-{
-  if (motor_left_speed > motor_right_speed)
-  {
+void restorePosition(int16_t motorLeftSpeed, int16_t motorRightSpeed) {
+  if (motorLeftSpeed > motorRightSpeed) {
     // RIGHT_TIGHT_FORWARD
-    analogWrite(MOTOR_LEFT_FORWARD_PIN, motor_left_speed);
+    analogWrite(MOTOR_LEFT_FORWARD_PIN, motorLeftSpeed);
     digitalWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
     digitalWrite(MOTOR_RIGHT_FORWARD_PIN, LOW);
     analogWrite(MOTOR_RIGHT_BACKWARD_PIN, 1);
-  }
-  else if (motor_left_speed < motor_right_speed)
-  {
+  } else if (motorLeftSpeed < motorRightSpeed) {
     // LEFT_TIGHT_FORWARD
     digitalWrite(MOTOR_LEFT_FORWARD_PIN, LOW);
     analogWrite(MOTOR_LEFT_BACKWARD_PIN, 1);
-    analogWrite(MOTOR_RIGHT_FORWARD_PIN, motor_right_speed);
+    analogWrite(MOTOR_RIGHT_FORWARD_PIN, motorRightSpeed);
     digitalWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
   }
 }
@@ -119,52 +131,49 @@ void restorePosition(int16_t motor_left_speed, int16_t motor_right_speed)
  * a position under the middle sensor.
  * @return Position value (500, 1000, 1500)
  */
-uint16_t readLinePosition()
-{
+uint16_t readLinePosition() {
   // Read the IR sensors each 2500 micro seconds
   unsigned long interval = 2500;
   static unsigned long previousTime = 0;
   unsigned long currentTime = micros();
 
-  if (currentTime - previousTime >= interval)
-  {
-    line_sensor_values[0] = digitalRead(IR_TRACKING_SENSOR_RIGHT_PIN);
-    line_sensor_values[1] = digitalRead(IR_TRACKING_SENSOR_CENTER_PIN);
-    line_sensor_values[2] = digitalRead(IR_TRACKING_SENSOR_LEFT_PIN);
+  if (currentTime - previousTime >= interval) {
+    lineSensorValues[0] = digitalRead(IR_TRACKING_SENSOR_RIGHT_PIN);
+    lineSensorValues[1] = digitalRead(IR_TRACKING_SENSOR_CENTER_PIN);
+    lineSensorValues[2] = digitalRead(IR_TRACKING_SENSOR_LEFT_PIN);
 
     previousTime = currentTime;
   }
 
-  static int last_position = 1000; // line in the center
+  static int lastPosition = 1000;  // line in the center
 
   // Get calibrated sensor values returned in the sensors array,
   // along with the line position.
   // position will range from 1500 to 3000, with 1500 corresponding
   // to the line over the middle sensor
 
-  num_non_detected_line_sensor = line_sensor_values[0] + line_sensor_values[1] + line_sensor_values[2];
+  numNonDetectedLineSensor =
+    lineSensorValues[0] + lineSensorValues[1] + lineSensorValues[2];
 
   // The finish line, all sensors detect the black line
-  if (num_non_detected_line_sensor == 0)
-  {
+  if (numNonDetectedLineSensor == 0) {
     return 0;
   }
 
-  uint16_t position = (2000 * line_sensor_values[2] + 1000 * line_sensor_values[1] +
-                       0 * line_sensor_values[0]) /
-                      num_non_detected_line_sensor;
+  uint16_t position =
+    (2000 * lineSensorValues[2] + 1000 * lineSensorValues[1] + 0 * lineSensorValues[0])
+    / numNonDetectedLineSensor;
 
   // Remembers where the sensor saw the line,
   // so if you ever lose the line to the left or the right,
   // its line position will continue to indicate the direction
   // you need to go to reacquire the line
 
-  if (num_non_detected_line_sensor == line_sensor_count)
-  {
-    position = last_position;
+  if (numNonDetectedLineSensor == lineSensorCount) {
+    position = lastPosition;
   }
 
-  last_position = position;
+  lastPosition = position;
 
   return position;
 }
@@ -172,24 +181,22 @@ uint16_t readLinePosition()
 /**
  * @brief Avoid obstacle
  *
- * @param min_obstacle_distance Avoid obstacle if the distance is less than min_obstacle_distance
+ * @param minObstacleDistance Avoid obstacle if the distance is less than
+ * minObstacleDistance
  */
-void avoidObstacle(uint8_t min_obstacle_distance)
-{
-  uint16_t current_position;
+void avoidObstacle(uint8_t minObstacleDistance) {
+  uint16_t currentPosition;
 
-  if (getDistance() < min_obstacle_distance)
-  {
+  if (getDistance() < minObstacleDistance) {
     // Stop if obstacle is detected
     setDirection(STOP_FAST, 255);
     delay(800);
 
-    current_position = readLinePosition();
+    currentPosition = readLinePosition();
     // Turn right till the left IR sensor is under the line
-    while (current_position != 500)
-    {
+    while (currentPosition != 500) {
       setDirection(RIGHT_TIGHT_FORWARD, 200);
-      current_position = readLinePosition();
+      currentPosition = readLinePosition();
     }
 
     // Turn right
@@ -206,11 +213,10 @@ void avoidObstacle(uint8_t min_obstacle_distance)
 
     readLinePosition();
     // Go forward at 45 degree
-    while (num_non_detected_line_sensor == line_sensor_count)
-    {
+    while (numNonDetectedLineSensor == lineSensorCount) {
       setDirection(FORWARD, 255);
 
-      // Refresh num_non_detected_line_sensor
+      // Refresh numNonDetectedLineSensor
       readLinePosition();
     }
 
@@ -224,24 +230,23 @@ void avoidObstacle(uint8_t min_obstacle_distance)
  * @brief Serial prints the line and motor positions.
  *
  */
-void SerialPrintPosition(uint16_t current_position, int16_t motor_left_speed, int16_t motor_right_speed)
-{
-  for (int i = 0; i < line_sensor_count; i++)
-  {
-    Serial.print(line_sensor_values[i]);
+void SerialPrintPosition(
+  uint16_t currentPosition, int16_t motorLeftSpeed, int16_t motorRightSpeed) {
+  for (int i = 0; i < lineSensorCount; i++) {
+    Serial.print(lineSensorValues[i]);
     Serial.print("\t");
   }
 
-  Serial.print(current_position);
+  Serial.print(currentPosition);
   Serial.print("\t");
 
-  Serial.print(num_non_detected_line_sensor);
+  Serial.print(numNonDetectedLineSensor);
   Serial.print("\t");
 
-  Serial.print(motor_left_speed);
+  Serial.print(motorLeftSpeed);
   Serial.print("\t");
 
-  Serial.print(motor_right_speed);
+  Serial.print(motorRightSpeed);
   Serial.print("\t");
   Serial.println();
   delay(1500);

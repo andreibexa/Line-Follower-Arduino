@@ -1,16 +1,16 @@
 #ifndef SRC_ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
 #define SRC_ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
 
-#include <HardwareSerial.h>
-#include <ArduinoIoTCloud.h>
+#include "esp32/esp32_transfer/esp32_transfer.h"
 #include "esp32/secrets.h"
+#include <ArduinoIoTCloud.h>
 
 extern WiFiConnectionHandler ArduinoIoTPreferredConnection;
 
-extern bool line_follower_mode;
-extern int base_speed;
-extern int max_speed;
-extern int min_speed;
+extern bool lineFollowerMode;
+extern int baseSpeed;
+extern int maxSpeed;
+extern int minSpeed;
 extern float kp;
 
 /*
@@ -47,6 +47,8 @@ void onKpChange();
  * @brief Initialize the properties for Arduino Cloud
  *
  */
-void initProperties();
+void initThingProperties();
 
-#endif // SRC_ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
+void onIoTSync();
+
+#endif  // SRC_ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
