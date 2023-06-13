@@ -6,7 +6,7 @@
 #include <Arduino.h>
 
 /**
- * @brief Initialize Pin Mode
+ * @brief Set pin mode for the Jade Uno+ board
  *
  */
 void setPinsMode() {
@@ -55,8 +55,6 @@ void setup() {
  *`
  */
 void loop() {
-  // Matrix Led loop
-  loopMatrix();
 
   // Serial Transfer loop
   loopSerialTransfer();
