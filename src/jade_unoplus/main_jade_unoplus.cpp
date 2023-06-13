@@ -1,7 +1,7 @@
 #include "jade_unoplus/eeprom_data/eeprom_data.h"
 #include "jade_unoplus/jade_transfer/jade_transfer.h"
-#include "jade_unoplus/led_matrix/led_matrix.h"
 #include "jade_unoplus/line_follower/line_follower.h"
+#include "jade_unoplus/line_follower/button_mode.h"
 #include "jade_unoplus/pins_jade_unoplus.h"
 #include <Arduino.h>
 
@@ -24,6 +24,11 @@ void setPinsMode() {
   // Ultrasonic Sensor Module
   pinMode(ULTRASONIC_TRIG_PIN, OUTPUT);
   pinMode(ULTRASONIC_ECHO_PIN, INPUT);
+
+  // Line follower pushup button (On/Off)
+  // Enable the internal pull-up resistor
+  pinMode(LINE_FOLLOWER_MODE_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(LINE_FOLLOWER_MODE_PIN), toggleLineFollowerMode, CHANGE);
 }
 
 /**
@@ -45,9 +50,6 @@ void setup() {
 
   // SET pins mode INPUT/OUTPUT
   setPinsMode();
-
-  // Matrix setup
-  setupMatrix();
 }
 
 /**
