@@ -56,13 +56,19 @@ void receiveLineFollowerSettings() {
   // Receive the new settings
   JadeTransfer.rxObj(lineFollowerSettings);
 
-  if (lineFollowerSettings.lineFollowerMode == true) {
-    // Enable the line follower mode
-    enableLineFollowerMode();
-  } else {
-    // Disable the line follower mode
-    disableLineFollowerMode();
+  // Save lineFollowerSettings to EEPROM
+  if (minSpeed != lineFollowerSettings.minSpeed
+      || baseSpeed != lineFollowerSettings.baseSpeed
+      || maxSpeed != lineFollowerSettings.maxSpeed || kp != lineFollowerSettings.kp) {
+    saveLineFollowerSettings();
   }
+
+  // Stop the Line Follower
+  if (lineFollowerSettings.lineFollowerMode == 0) {
+    stopLineFollower();
+  }
+
+
 
   Serial.println("Receive lineFollowerSettings from ESP32:");
   Serial.print("lineFollowerMode ");
@@ -76,13 +82,6 @@ void receiveLineFollowerSettings() {
   Serial.print("kp ");
   Serial.println(lineFollowerSettings.kp);
   Serial.println();
-
-  // Save lineFollowerSettings to EEPROM
-  if (minSpeed != lineFollowerSettings.minSpeed
-      || baseSpeed != lineFollowerSettings.baseSpeed
-      || maxSpeed != lineFollowerSettings.maxSpeed || kp != lineFollowerSettings.kp) {
-    saveLineFollowerSettings();
-  }
 }
 
 /**

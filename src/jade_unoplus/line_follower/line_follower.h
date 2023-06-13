@@ -1,5 +1,5 @@
-#ifndef SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
-#define SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
+#ifndef JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
+#define JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 
 #include "jade_unoplus/jade_transfer/jade_transfer.h"
 #include "jade_unoplus/line_follower/control_direction.h"
@@ -9,37 +9,38 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-// Default values for line follower settings
-#define DEFAULT_MODE false
-#define DEFAULT_MIN_SPEED 0
-#define DEFAULT_BASE_SPEED 180
-#define DEFAULT_MAX_SPEED 255
-#define DEFAULT_KP 0.40
+/**
+ * @brief Run the Line Follower only if lineFollowerMode is true
+ */
+void loopLineFollower();
 
-// Function to initialize the line follower settings with default values
+// Initialize the line follower settings with default values
 void initializeLineFollowerSettings();
 
 /**
- * @brief Enable Line Follower mode
+ * @brief Run the Line Follower
  *
  */
-void enableLineFollowerMode();
+void runLineFollower();
 
 /**
- * @brief Disable the Line Follower mode
+ * @brief Stop Line Follower
  *
  */
-void disableLineFollowerMode();
+void stopLineFollower();
 
 /**
- * @brief This function calculate the line position error using a PID control
+ * @brief Calculate the line position error using a PID control
  * algorithm.
  *
  */
-void calculatePID(uint16_t currentPosition);
+void calculatePID();
 
 /**
  * Out of line. Turn back to the last known position
+ *
+ * @param motorLeftSpeed
+ * @param motorRightSpeed
  *
  */
 void restorePosition(int16_t motorLeftSpeed, int16_t motorRightSpeed);
@@ -49,22 +50,22 @@ void restorePosition(int16_t motorLeftSpeed, int16_t motorRightSpeed);
  *
  * @return Position value (500, 1000, 1500)
  */
-uint16_t readLinePosition();
+void readLinePosition();
 
 /**
- * @brief Avoid obstacle
+ * @brief Avoids obstacles if the distance to an obstacle is less than the specified minimum distance
  *
- * @param minObstacleDistance Avoid obstacle if the distance is less than
- * minObstacleDistance
+ * @param minObstacleDistance The minimum distance threshold for obstacle avoidance
  */
 void avoidObstacle(uint8_t minObstacleDistance);
 
 /**
  * @brief Serial prints the line and motor positions.
  *
+ * @param motorLeftSpeed
+ * @param motorRightSpeed
  */
-void SerialPrintPosition(
-  uint16_t currentPosition, int16_t motorLeftSpeed, int16_t motorRightSpeed);
+void SerialPrintPosition(uint16_t motorLeftSpeed, uint16_t motorRightSpeed);
 
 /**
  * @brief Upload the line follower settings to ESP32
@@ -72,4 +73,4 @@ void SerialPrintPosition(
  */
 void uploadLineFollowerSettings();
 
-#endif  // SRC_JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
+#endif  // JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
