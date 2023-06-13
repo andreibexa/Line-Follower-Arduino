@@ -55,9 +55,12 @@ void setup() {
  *`
  */
 void loop() {
-  // Matrix loop
+  // Matrix Led loop
   loopMatrix();
 
-  // Loop Serial Transfer
+  // Serial Transfer loop
   loopSerialTransfer();
+
+  // Line follower loop
+  loopLineFollower();
 }
