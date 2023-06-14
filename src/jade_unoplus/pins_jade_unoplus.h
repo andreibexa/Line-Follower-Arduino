@@ -25,4 +25,9 @@
 #define IR_TRACKING_SENSOR_CENTER_PIN A1  // OTC
 #define IR_TRACKING_SENSOR_LEFT_PIN A2    // OTL
 
+// Multicolor led
+#define RED_PIN A7
+#define GREEN_PIN A6
+#define BLUE_PIN 23
+
 #endif  // JADE_UNOPLUS_PINS_JADE_UNOPLUS_H_

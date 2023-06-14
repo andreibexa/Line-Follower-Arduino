@@ -5,7 +5,7 @@
 #include "jade_unoplus/line_follower/control_direction.h"
 #include "jade_unoplus/obstacle_detector/obstacle_detector.h"
 #include "jade_unoplus/pins_jade_unoplus.h"
-#include "line_follower_struct_settings.h"
+#include "transfer/struct_line_follower_settings.h"
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 

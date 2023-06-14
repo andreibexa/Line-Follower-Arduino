@@ -2,6 +2,7 @@
 #include "jade_unoplus/jade_transfer/jade_transfer.h"
 #include "jade_unoplus/line_follower/line_follower.h"
 #include "jade_unoplus/line_follower/button_mode.h"
+#include "jade_unoplus/multicolor_led/multicolor_led.h"
 #include "jade_unoplus/pins_jade_unoplus.h"
 #include <Arduino.h>
 
@@ -25,10 +26,14 @@ void setPinsMode() {
   pinMode(ULTRASONIC_TRIG_PIN, OUTPUT);
   pinMode(ULTRASONIC_ECHO_PIN, INPUT);
 
+  // Multicolor led
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
+
   // Line follower pushup button (On/Off)
   // Enable the internal pull-up resistor
   pinMode(LINE_FOLLOWER_MODE_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(LINE_FOLLOWER_MODE_PIN), toggleLineFollowerMode, CHANGE);
 }
 
 /**
@@ -50,6 +55,9 @@ void setup() {
 
   // SET pins mode INPUT/OUTPUT
   setPinsMode();
+
+  // Attach interrupt when the line follower pushup button is pressed
+  attachInterrupt(digitalPinToInterrupt(LINE_FOLLOWER_MODE_PIN), toggleLineFollowerMode, CHANGE);
 }
 
 /**
@@ -63,4 +71,7 @@ void loop() {
 
   // Line follower loop
   loopLineFollower();
+
+  // Multicolor LED loop
+  loopMultiColorLed();
 }
