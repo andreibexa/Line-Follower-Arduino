@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 struct __attribute__((packed)) STRUCT_SYSTEM_STATUS {
-  uint8_t wifiStatus;
-  uint8_t cloudStatus;
+  uint8_t wifi;
+  uint8_t cloud;
 };
 
 extern STRUCT_SYSTEM_STATUS systemStatus;

@@ -40,3 +40,22 @@ void transmitLineFollowerSettings() {
   sendSize = ESP32Transfer.txObj(lineFollowerSettings, sendSize);
   ESP32Transfer.sendData(sendSize, PacketId::kCloudLineFollowerSettings);
 }
+
+
+/**
+ * @brief Transmit the system status, WiFi connections status and Arduino Cloud status
+ *
+ */
+void transmitSystemStatus() {
+  unsigned long currentTime = millis();
+  unsigned long startTime = currentTime;
+  uint16_t period = 1000;
+
+  if (currentTime - startTime > period) {
+    refreshSystemStatus();
+
+    uint16_t sendSize = 0;
+    sendSize = ESP32Transfer.txObj(systemStatus, sendSize);
+    ESP32Transfer.sendData(sendSize, PacketId::kSystemStatus);
+  }
+}
