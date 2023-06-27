@@ -59,20 +59,22 @@ void handleStatusFromESP32() {
  *
  */
 void displayBatteryStatus() {
-
   // Read the battery voltage each second
   static unsigned long previousMillis = 0;
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= 1000) {
     previousMillis = currentMillis;
 
-    // Read and display the 18650 battery voltage on the LCD
+    // Read the 18650 battery voltage
     uint16_t boardBatteryVoltage = readBoardBatteryVoltage();
+
+    // Display the 18650 battery voltage on the LCD
     display18650BatteryVoltage(boardBatteryVoltage);
 
+    // Read the AA battery voltage
     float aaBatteryVoltage = readAAbatteryVoltage();
 
-    // Read and display the AA battery voltage on the LCD
+    // Display the AA battery voltage on the LCD
     displayAAbatteryVoltage(aaBatteryVoltage);
   }
 }

@@ -9,8 +9,8 @@
 #define MOTOR_RIGHT_FORWARD_PIN 3   // M1(A) - PWM PIN
 #define MOTOR_RIGHT_BACKWARD_PIN 4  //  M1(B)
 
-#define MOTOR_LEFT_FORWARD_PIN 6   // M2(A) - PWM PIN
-#define MOTOR_LEFT_BACKWARD_PIN 7  // M2(B)
+#define MOTOR_LEFT_FORWARD_PIN 6    // M2(A) - PWM PIN
+#define MOTOR_LEFT_BACKWARD_PIN 7   // M2(B)
 
 // #define PIN 8
 
@@ -36,10 +36,10 @@
 #define IR_TRACKING_SENSOR_RIGHT_PIN A2   // OTR
 
 // AA Battery voltage divider
-#define AA_BATTERY_VOLTAGE_PIN A3
+#define AA_BATTERY_VOLTAGE_PIN A7
 
 // LCD Display 1602 + I2C
 #define LCD_SDA_PIN A4  // SDA
 #define LCD_SCL_PIN A5  // SCL
 
-#endif  // JADE_UNOPLUS_PINS_JADE_UNOPLUS_H_
+#endif                  // JADE_UNOPLUS_PINS_JADE_UNOPLUS_H_
