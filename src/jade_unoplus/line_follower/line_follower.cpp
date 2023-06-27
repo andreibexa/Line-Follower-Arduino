@@ -1,22 +1,28 @@
 #include "jade_unoplus/line_follower/line_follower.h"
 
 uint8_t const lineSensorCount = 3;  // Number of line sensors
-uint8_t lineSensorValues[lineSensorCount];
-uint8_t numNonDetectedLineSensor;
+byte lineSensorValues[lineSensorCount];
+uint8_t numDetectedLineSensor;
 uint16_t currentPosition;
+
+// Line follower settings - defined in src/jade_unoplus/jade_transfer/struct_line_follower_settings.h
+STRUCT_LINE_FOLLOWER_SETTINGS lineFollowerSettings;
 
 // Initial line follower settings
 const bool defaultMode = false;
+const bool defaultAvoidObstacleMode = false;
 const uint8_t defaultMinSpeed = 0;
 const uint8_t defaultBaseSpeed = 180;
 const uint8_t defaultMaxSpeed = 255;
-const float defaultKp = 0.40;
+float defaultKp = 0.40;
 
-STRUCT_LINE_FOLLOWER_SETTINGS lineFollowerSettings;
+// isRunning is used to avoid running stopLineFollower() in a loop
+bool isRunning = false;
 
 // Initialize the line follower settings with default values
 void initializeLineFollowerSettings() {
   lineFollowerSettings.lineFollowerMode = defaultMode;
+  lineFollowerSettings.avoidObstacleMode = defaultAvoidObstacleMode;
   lineFollowerSettings.minSpeed = defaultMinSpeed;
   lineFollowerSettings.baseSpeed = defaultBaseSpeed;
   lineFollowerSettings.maxSpeed = defaultMaxSpeed;
@@ -27,12 +33,11 @@ void initializeLineFollowerSettings() {
  * @brief Run the Line Follower only if lineFollowerMode is true
  */
 void loopLineFollower() {
-  if (lineFollowerSettings.lineFollowerMode == 0) {
-    return;
+  if (lineFollowerSettings.lineFollowerMode == true) {
+    runLineFollower();
+  } else {
+    stopLineFollower();
   }
-
-  // Run the Line Follower
-  runLineFollower();
 }
 
 /**
@@ -40,10 +45,18 @@ void loopLineFollower() {
  *
  */
 void runLineFollower() {
-  readLinePosition();
+  isRunning = true;
+  Serial.println(lineFollowerSettings.lineFollowerMode);
 
+  // Change the led color to Green
+  setMultiColorLed(0, 3, 0, false);
+
+  readLinePosition();
+  /*
   // Avoid obstacle closer than 30 cm
-  avoidObstacle(30);
+  if (lineFollowerSettings.avoidObstacleMode == true) {
+    avoidObstacle(30);
+  }
 
   // Get IR sensor position
   readLinePosition();
@@ -52,9 +65,9 @@ void runLineFollower() {
   calculatePID();
 
   // Stop the line follower when all sensors detect a horizontal black line.
-  if (numNonDetectedLineSensor == 0) {
+  if (numDetectedLineSensor == 0) {
     stopLineFollower();
-  }
+  } */
 }
 
 /**
@@ -62,12 +75,21 @@ void runLineFollower() {
  *
  */
 void stopLineFollower() {
-  Serial.println("Disable the  line follower mode");
+  // Avoid running this function in a loop
+  if (isRunning == false) {
+    return;
+  }
 
+  isRunning = false;
+
+  // Stop both motors
   setDirection(STOP_SLOW, 0);
-  lineFollowerSettings.lineFollowerMode = false;
 
-  // Send command to ESP32 to disable the lineFollowerMode button in Arduino Cloud
+  // Change the led color to Red
+  setMultiColorLed(3, 0, 0, false);
+
+  // Send the lineFollowerMode status to Arduino Cloud
+  lineFollowerSettings.lineFollowerMode = false;
   transmitLineFollowerSettings();
 }
 
@@ -134,7 +156,7 @@ void restorePosition(int16_t motorLeftSpeed, int16_t motorRightSpeed) {
  * @brief Reads the line position using the IR sensors.
  * The returned value will range from 0 to 1500, with 1000 corresponding to
  * a position under the middle sensor.
- * @return Position value (500, 1000, 1500)
+ *
  */
 void readLinePosition() {
   // Read the IR sensors each 2500 micro seconds
@@ -157,20 +179,19 @@ void readLinePosition() {
   // position will range from 1500 to 3000, with 1500 corresponding
   // to the line over the middle sensor
 
-  numNonDetectedLineSensor =
+  numDetectedLineSensor =
     lineSensorValues[0] + lineSensorValues[1] + lineSensorValues[2];
-
 
   currentPosition =
     (2000 * lineSensorValues[2] + 1000 * lineSensorValues[1] + 0 * lineSensorValues[0])
-    / numNonDetectedLineSensor;
+    / numDetectedLineSensor;
 
   // Remembers where the sensor saw the line,
   // so if he ever lose the line to the left or the right,
-  // currentPosition will continue to indicate the direction
-  // he needs to follow
+  // currentPosition will continue to indicate a direction
+  // to follow
 
-  if (numNonDetectedLineSensor == lineSensorCount) {
+  if (numDetectedLineSensor == lineSensorCount) {
     currentPosition = lastPosition;
   }
 
@@ -183,7 +204,6 @@ void readLinePosition() {
  * @param minObstacleDistance The minimum distance threshold for obstacle avoidance
  */
 void avoidObstacle(uint8_t minObstacleDistance) {
-
   if (getDistance() < minObstacleDistance) {
     // Stop if obstacle is detected
     setDirection(STOP_FAST, 255);
@@ -210,10 +230,10 @@ void avoidObstacle(uint8_t minObstacleDistance) {
 
     readLinePosition();
     // Go forward at 45 degree
-    while (numNonDetectedLineSensor == lineSensorCount) {
+    while (numDetectedLineSensor == lineSensorCount) {
       setDirection(FORWARD, 255);
 
-      // Refresh numNonDetectedLineSensor
+      // Refresh numDetectedLineSensor
       readLinePosition();
     }
 
@@ -236,7 +256,7 @@ void SerialPrintPosition(uint16_t motorLeftSpeed, uint16_t motorRightSpeed) {
   Serial.print(currentPosition);
   Serial.print("\t");
 
-  Serial.print(numNonDetectedLineSensor);
+  Serial.print(numDetectedLineSensor);
   Serial.print("\t");
 
   Serial.print(motorLeftSpeed);

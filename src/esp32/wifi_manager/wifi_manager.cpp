@@ -6,37 +6,59 @@ WiFiManager wm;
 
 char const hostname[] = "LINE-FOLLOWER-7598";
 char const password[] = "password";
+char ssid[32];  // SSID char limit
+char pass[63];  // PASS char limit
 
 // Setup wifi manager
 void setupWifiManager() {
-    WiFi.mode(WIFI_STA);  // explicitly set mode, esp defaults to STA+AP
-    // it is a good practice to make sure your code sets wifi mode how you want
-    // it.
+  WiFi.mode(WIFI_STA);  // explicitly set mode, esp defaults to STA+AP
+  // it is a good practice to make sure your code sets wifi mode how you want
+  // it.
 
-    // reset settings - wipe stored credentials for testing
-    // these are stored by the esp library
-    // wm.resetSettings();
+  // reset settings - wipe stored credentials for testing
+  // these are stored by the esp library
+  // wm.resetSettings();
 
-    // Disable debug
-    wm.setDebugOutput(false);
-    delay(1000);
+  // Disable debug
+  wm.setDebugOutput(true);
 
-    // Set Hostname
-    wm.setHostname(hostname);
+  // Set Hostname
+  wm.setHostname(hostname);
 
-    // Automatically connect using saved credentials,
-    // if connection fails, it starts an access point with the specified name (
-    // "AutoConnectAP"), if empty will auto generate SSID, if password is blank
-    // it will be anonymous AP (wm.autoConnect()) then goes into a blocking loop
-    // awaiting configuration and will return success result
-    bool res;
-    res = wm.autoConnect(hostname, password);  // password protected ap
+  String str_ssid = wm.getWiFiSSID(false);
+  String str_pass = wm.getWiFiPass(false);
 
-    if (!res) {
-        Serial.println("Failed to connect");
-        // ESP.restart();
-    } else {
-        // if you get here you have connected to the WiFi
-        Serial.println("connected...yeey :)");
-    }
+  // Transmit WiFi ssid and pass to the Arduino Cloud
+  preferredConnectionHandler(ssid, pass);
+
+  // Continue, even if not connected to WiFi
+  wm.setConfigPortalBlocking(false);
+
+  // Set a timeout period for the configuration portal
+  wm.setConfigPortalTimeout(180);
+
+  // Automatically connect using saved credentials,
+  // if connection fails, it starts an access point with the specified name (
+  // "AutoConnectAP"), if empty will auto generate SSID, if password is blank
+  // it will be anonymous AP (wm.autoConnect()) then goes into a blocking loop
+  // awaiting configuration and will return success result
+  bool res;
+  res = wm.autoConnect(hostname, password);  // password protected ap
+
+  if (!res) {
+    Serial.println("Failed to connect to wireless");
+    // ESP.restart();
+  } else {
+    // if you get here you have connected to the WiFi
+    Serial.println("Connected to wireless");
+  }
+}
+
+/**
+ * @brief Loop Wifi Manager
+ *
+ */
+void loopWiFiManager() {
+  // Non blocking function for the WiFi manager
+  wm.process();
 }

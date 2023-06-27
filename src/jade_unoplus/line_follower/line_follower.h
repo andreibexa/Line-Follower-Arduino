@@ -1,13 +1,12 @@
 #ifndef JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 #define JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 
-#include "jade_unoplus/jade_transfer/jade_transfer.h"
-#include "jade_unoplus/line_follower/control_direction.h"
 #include "jade_unoplus/obstacle_detector/obstacle_detector.h"
+#include "jade_unoplus/line_follower/control_direction.h"
+#include "jade_unoplus/multicolor_led/multicolor_led.h"
+#include "jade_unoplus/jade_transfer/transmit.h"
 #include "jade_unoplus/pins_jade_unoplus.h"
-#include "transfer/struct_line_follower_settings.h"
 #include <Arduino.h>
-#include <SoftwareSerial.h>
 
 /**
  * @brief Run the Line Follower only if lineFollowerMode is true
@@ -48,7 +47,6 @@ void restorePosition(int16_t motorLeftSpeed, int16_t motorRightSpeed);
 /**
  * @brief Reads the line position using the IR sensors.
  *
- * @return Position value (500, 1000, 1500)
  */
 void readLinePosition();
 

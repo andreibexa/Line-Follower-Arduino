@@ -4,7 +4,7 @@
 enum PacketId {
   kLocalLineFollowerSettings,
   kCloudLineFollowerSettings,
-  kSystemStatus
+  kESP32Status
 };
 
 #endif  // INCLUDE_TRANSFER_ENUM_PACKET_ID_H_

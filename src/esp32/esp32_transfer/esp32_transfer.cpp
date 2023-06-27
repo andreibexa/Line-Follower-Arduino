@@ -1,6 +1,6 @@
 #include "esp32/esp32_transfer/esp32_transfer.h"
 
-SerialTransfer ESP32Transfer;
+SerialTransfer serialTransfer;
 
 // Array of callbacks.
 // The order of the callbacks in the callbackArr array should match the order of
@@ -16,7 +16,7 @@ STRUCT_LINE_FOLLOWER_SETTINGS lineFollowerSettings;
  * @brief Config Serial Transfer
  *
  */
-void setupESP32Transfer() {
+void setupSerialTransfer() {
   Serial2.begin(9600, SERIAL_8N1, 16, 17);
 
   // Config Serial Transfer
@@ -26,17 +26,14 @@ void setupESP32Transfer() {
   transferConfig.callbacksLen = sizeof(callbackArr) / sizeof(functionPtr);
 
   // Begin Serial Transfer
-  ESP32Transfer.begin(Serial2, transferConfig);
-
-  // Request the lineFollowerSettings from Jade UnoPlus board
-  requestLineFollowerSettings();
+  serialTransfer.begin(Serial2, transferConfig);
 }
 
 /**
  * @brief Loop Serial Transfer
  *
  */
-void loopESP32Transfer() {
+void loopSerialTransfer() {
   // Check for available serial packets and invoke callbacks
-  ESP32Transfer.tick();
+  serialTransfer.tick();
 }

@@ -2,11 +2,16 @@
 
 // The bellow code is adapted from Arduino IoT Cloud - https://cloud.arduino.com
 
-float kp;
-int baseSpeed;
-int maxSpeed;
-int minSpeed;
+char SSID[32];  // Network SSID (name)
+char PASS[63];  // Network password (use for WPA, or use as key for WEP)
+
+
 bool lineFollowerMode;
+bool avoidObstacleMode;
+int minSpeed;
+int maxSpeed;
+int baseSpeed;
+float kp;
 
 /*
   Since LineFollowerMode is READ_WRITE variable, onLineFollowerModeChange() is
@@ -15,24 +20,19 @@ bool lineFollowerMode;
 void onLineFollowerModeChange() {
   // Add your code here to act upon LineFollowerMode change
   transmitLineFollowerSettings();
+  Serial.print("onLineFollowerModeChange lineFollowerMode ");
+  Serial.println(lineFollowerMode);
 }
 
 /*
-  Since MaxSpeed is READ_WRITE variable, onMaxSpeedChange() is
+  Since avoidObstacleMode is READ_WRITE variable, onavoidObstacleModeChange() is
   executed every time a new value is received from IoT Cloud.
 */
-void onMaxSpeedChange() {
-  // Add your code here to act upon MaxSpeed change
+void onAvoidObstacleModeChange() {
+  // Add your code here to act upon avoidObstacleMode change
   transmitLineFollowerSettings();
-}
-
-/*
-  Since BaseSpeed is READ_WRITE variable, onBaseSpeedChange() is
-  executed every time a new value is received from IoT Cloud.
-*/
-void onBaseSpeedChange() {
-  // Add your code here to act upon BaseSpeed change
-  transmitLineFollowerSettings();
+  Serial.print("onAvoidObstacleModeChange avoidObstacleMode ");
+  Serial.println(avoidObstacleMode);
 }
 
 /*
@@ -42,6 +42,30 @@ void onBaseSpeedChange() {
 void onMinSpeedChange() {
   // Add your code here to act upon MinSpeed change
   transmitLineFollowerSettings();
+  Serial.print("onMinSpeedChange minSpeed ");
+  Serial.println(minSpeed);
+}
+
+/*
+  Since BaseSpeed is READ_WRITE variable, onBaseSpeedChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onBaseSpeedChange() {
+  // Add your code here to act upon BaseSpeed change
+  transmitLineFollowerSettings();
+  Serial.print("onBaseSpeedChange baseSpeed ");
+  Serial.println(baseSpeed);
+}
+
+/*
+  Since MaxSpeed is READ_WRITE variable, onMaxSpeedChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onMaxSpeedChange() {
+  // Add your code here to act upon MaxSpeed change
+  transmitLineFollowerSettings();
+  Serial.print("onMaxSpeedChange maxSpeed ");
+  Serial.println(maxSpeed);
 }
 
 /*
@@ -51,6 +75,8 @@ void onMinSpeedChange() {
 void onKpChange() {
   // Add your code here to act upon Kp change
   transmitLineFollowerSettings();
+  Serial.println("onKpChange kp ");
+  Serial.println(kp);
 }
 
 /**
@@ -64,10 +90,12 @@ void onIoTSync() {
 
   // Line Follower Mode should be always OFF when the board is powered on
   ArduinoCloud.addProperty(kp, READWRITE, ON_CHANGE, onKpChange);
-  ArduinoCloud.addProperty(baseSpeed, READWRITE, ON_CHANGE, onKpChange);
-  ArduinoCloud.addProperty(minSpeed, READWRITE, ON_CHANGE, onMinSpeedChange);
+  ArduinoCloud.addProperty(baseSpeed, READWRITE, ON_CHANGE, onBaseSpeedChange);
   ArduinoCloud.addProperty(maxSpeed, READWRITE, ON_CHANGE, onMaxSpeedChange);
-  ArduinoCloud.addProperty(lineFollowerMode, READWRITE, ON_CHANGE, onLineFollowerModeChange);
+  ArduinoCloud.addProperty(minSpeed, READWRITE, ON_CHANGE, onMinSpeedChange);
+  ArduinoCloud.addProperty(avoidObstacleMode, READWRITE, ON_CHANGE, onAvoidObstacleModeChange);
+  ArduinoCloud.addProperty(
+    lineFollowerMode, READWRITE, ON_CHANGE, onLineFollowerModeChange, 3);
 }
 
 /**
@@ -83,6 +111,15 @@ void initThingProperties() {
   ArduinoCloud.addCallback(ArduinoIoTCloudEvent::SYNC, onIoTSync);
 }
 
+/**
+ * @brief Copy the SSID and PASS from the WiFi manager
+ *
+ */
+void preferredConnectionHandler(char* ssid, char* pass) {
+  strcpy(SSID, ssid);
+  strcpy(PASS, pass);
+}
+
 // Wifi manager extension handles the preferred connection method for Arduino
 // IoT. This line does not affect the wifi connection.
-WiFiConnectionHandler ArduinoIoTPreferredConnection("none", "none");
+WiFiConnectionHandler ArduinoIoTPreferredConnection(SSID, PASS);

@@ -1,26 +1,16 @@
 #include "jade_unoplus/multicolor_led/multicolor_led.h"
 
+bool ledBlink = false;
 uint8_t ledColorRed = 0;
 uint8_t ledColorGreen = 0;
 uint8_t ledColorBlue = 0;
-bool ledBlink = false;
 
 /**
  * @brief Multicolor LED loop called in the main loop
  *
  */
 void loopMultiColorLed() {
-  unsigned long currentTime = millis();
-  static unsigned long startTime = currentTime;
-
-  if (ledBlink && (currentTime - startTime) >= 500) {
-    // Turn off the LED for 500ms
-    changePINvalue(0, 0, 0);
-    startTime = currentTime;
-  } else {
-    // Turn on the LED with the defined RGB color
-    changePINvalue(ledColorRed, ledColorGreen, ledColorBlue);
-  }
+  toggleLedBlink();
 }
 
 /**
@@ -51,4 +41,31 @@ void setMultiColorLed(uint8_t r, uint8_t g, uint8_t b, bool blink) {
   ledColorGreen = g;
   ledColorBlue = b;
   ledBlink = blink;
+}
+
+/*
+* @brief Toggle the multicolor led blink
+*
+*/
+void toggleLedBlink() {
+  if (ledBlink == false) {
+    changePINvalue(ledColorRed, ledColorGreen, ledColorBlue);
+    return;
+  }
+
+  unsigned long currentTime = millis();
+  static unsigned long startTime = currentTime;
+  static bool isLedOn = false;
+
+  if (currentTime - startTime >= 600) {
+    isLedOn = !isLedOn;
+    // Turn off the LED for 600ms
+    if (isLedOn) {
+      changePINvalue(LOW, LOW, LOW);
+    } else {
+      changePINvalue(ledColorRed, ledColorGreen, ledColorBlue);
+    }
+
+    startTime = currentTime;
+  }
 }

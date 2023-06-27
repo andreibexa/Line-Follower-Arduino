@@ -1,16 +1,17 @@
-#ifndef SRC_ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
-#define SRC_ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
+#ifndef ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
+#define ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
 
-#include "esp32/esp32_transfer/esp32_transfer.h"
+#include "esp32/esp32_transfer/transmit.h"
 #include "esp32/secrets.h"
 #include <ArduinoIoTCloud.h>
 
 extern WiFiConnectionHandler ArduinoIoTPreferredConnection;
 
 extern bool lineFollowerMode;
+extern bool avoidObstacleMode;
+extern int minSpeed;
 extern int baseSpeed;
 extern int maxSpeed;
-extern int minSpeed;
 extern float kp;
 
 /*
@@ -18,6 +19,12 @@ extern float kp;
   executed every time a new value is received from IoT Cloud.
 */
 void onLineFollowerModeChange();
+
+/*
+  Since avoidObstacleMode is READ_WRITE variable, onavoidObstacleModeChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onAvoidObstacleModeChange();
 
 /*
   Since MaxSpeed is READ_WRITE variable, onMaxSpeedChange() is
@@ -49,6 +56,10 @@ void onKpChange();
  */
 void initThingProperties();
 
-void onIoTSync();
+/**
+ * @brief Copy the SSID and PASS from the preferred connection
+ *
+ */
+void preferredConnectionHandler(char* ssid, char* pass);
 
-#endif  // SRC_ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
+#endif  // ESP32_THING_PROPERTIES_THING_PROPERTIES_H_

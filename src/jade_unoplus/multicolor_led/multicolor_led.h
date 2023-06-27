@@ -3,11 +3,6 @@
 #include <Arduino.h>
 #include "jade_unoplus/pins_jade_unoplus.h"
 
-extern uint8_t ledColorRed;
-extern uint8_t ledColorGreen;
-extern uint8_t ledColorBlue;
-extern bool ledBlink;
-
 /**
  * @brief Multicolor LED loop called in the main loop
  *
@@ -34,5 +29,11 @@ void changePINvalue(uint8_t r, uint8_t g, uint8_t b);
  * @param blink Blink (true or false)
  */
 void setMultiColorLed(uint8_t r, uint8_t g, uint8_t b, bool blink = false);
+
+/*
+* @brief Toggle the multicolor led blink
+*
+*/
+void toggleLedBlink();
 
 #endif  // JADE_UNOPLUS_MULTICOLOR_LED_MULTICOLOR_LED_H_

@@ -1,10 +1,13 @@
+#include <Arduino.h>
 #include "jade_unoplus/eeprom_data/eeprom_data.h"
 #include "jade_unoplus/jade_transfer/jade_transfer.h"
 #include "jade_unoplus/line_follower/line_follower.h"
 #include "jade_unoplus/line_follower/button_mode.h"
 #include "jade_unoplus/multicolor_led/multicolor_led.h"
 #include "jade_unoplus/pins_jade_unoplus.h"
-#include <Arduino.h>
+#include "jade_unoplus/lcd/lcd.h"
+#include "jade_unoplus/system_status/system_status.h"
+
 
 /**
  * @brief Set pin mode for the Jade Uno+ board
@@ -32,8 +35,7 @@ void setPinsMode() {
   pinMode(BLUE_PIN, OUTPUT);
 
   // Line follower pushup button (On/Off)
-  // Enable the internal pull-up resistor
-  pinMode(LINE_FOLLOWER_MODE_PIN, INPUT_PULLUP);
+  pinMode(LINE_FOLLOWER_BUTTON_PIN, INPUT);
 }
 
 /**
@@ -44,20 +46,23 @@ void setup() {
   // Put your setup code here, to run once:
   Serial.begin(115200);
 
+  // Set the pins mode
+  setPinsMode();
+
   // Initialize line follower settings with default settings
   initializeLineFollowerSettings();
-
-  // setup the Jade UnoPlus Serial Transfer
-  setupSerialTransfer();
 
   // Initialize EEPROM
   initializeEEPROM();
 
-  // SET pins mode INPUT/OUTPUT
-  setPinsMode();
+  // Serial Transfer setup
+  setupSerialTransfer();
 
-  // Attach interrupt when the line follower pushup button is pressed
-  attachInterrupt(digitalPinToInterrupt(LINE_FOLLOWER_MODE_PIN), toggleLineFollowerMode, CHANGE);
+  // LCD setup
+  setupLCD();
+
+  // System status setup
+  setupSystemStatus();
 }
 
 /**
@@ -66,12 +71,18 @@ void setup() {
  */
 void loop() {
 
+  // Multicolor LED loop
+  loopMultiColorLed();
+
   // Serial Transfer loop
   loopSerialTransfer();
+
+  // Debounce the line follower mode on button pushup
+  debounceLineFollowerButton();
 
   // Line follower loop
   loopLineFollower();
 
-  // Multicolor LED loop
-  loopMultiColorLed();
+  // System status loop
+  loopSystemStatus();
 }

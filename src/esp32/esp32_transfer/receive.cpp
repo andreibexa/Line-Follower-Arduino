@@ -5,10 +5,11 @@
  *
  */
 void receiveLineFollowerSettings() {
-  ESP32Transfer.rxObj(lineFollowerSettings);
+  serialTransfer.rxObj(lineFollowerSettings);
 
   // Update the Arduino Cloud variables with the received values
   lineFollowerMode = lineFollowerSettings.lineFollowerMode;
+  avoidObstacleMode = lineFollowerSettings.avoidObstacleMode;
   baseSpeed = lineFollowerSettings.baseSpeed;
   maxSpeed = lineFollowerSettings.maxSpeed;
   minSpeed = lineFollowerSettings.minSpeed;
@@ -17,6 +18,8 @@ void receiveLineFollowerSettings() {
   Serial.println("Receive lineFollowerSettings from Jade:");
   Serial.print("lineFollowerMode ");
   Serial.println(lineFollowerSettings.lineFollowerMode);
+  Serial.print("avoidObstacleMode ");
+  Serial.println(lineFollowerSettings.avoidObstacleMode);
   Serial.print("minSpeed ");
   Serial.println(lineFollowerSettings.minSpeed);
   Serial.print("baseSpeed ");

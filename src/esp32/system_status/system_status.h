@@ -1,13 +1,13 @@
-#ifndef SRC_ESP32_SYSTEM_STATUS_SYSTEM_STATUS_H
-#define SRC_ESP32_SYSTEM_STATUS_SYSTEM_STATUS_H
-#include "transfer/struct_system_status.h"
+#ifndef ESP32_SYSTEM_STATUS_SYSTEM_STATUS_H_
+#define ESP32_SYSTEM_STATUS_SYSTEM_STATUS_H_
+#include "esp32/esp32_transfer/transmit.h"
 #include <WiFiManager.h>
 #include <ArduinoIoTCloud.h>
 
 /**
- * @brief Refresh system status structure
+ * @brief Refresh and transmit system status every 1 second
  *
  */
-void refreshSystemStatus();
+void refreshESP32Status();
 
-#endif  // SRC_ESP32_SYSTEM_STATUS_SYSTEM_STATUS_H
+#endif  // ESP32_SYSTEM_STATUS_SYSTEM_STATUS_H_

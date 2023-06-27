@@ -5,6 +5,7 @@
 
 struct __attribute__((packed)) STRUCT_LINE_FOLLOWER_SETTINGS {
   bool lineFollowerMode;
+  bool avoidObstacleMode;
   uint8_t minSpeed;
   uint8_t baseSpeed;
   uint8_t maxSpeed;

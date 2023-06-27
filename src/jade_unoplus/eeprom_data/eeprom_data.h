@@ -1,10 +1,9 @@
 #ifndef SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_
 #define SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_
 
-#include "transfer/struct_line_follower_settings.h"
+#include "serial_transfer/struct_line_follower_settings.h"
 #include <Arduino.h>
 #include <EEPROM.h>
-#include <SoftwareSerial.h>
 
 /**
  * @brief Initialize EEPROM
@@ -16,17 +15,5 @@ void initializeEEPROM();
  *
  */
 void saveLineFollowerSettings();
-
-/**
- * @brief Get lineFollowerSettings from EEPROM
- *
- */
-void getLineFollowerSettings();
-
-/**
- * @brief Print all the elements of the lineFollowerSettings structure.
- *
- */
-void printEEPROMSettings();
 
 #endif  // SRC_JADE_UNOPLUS_EEPROM_DATA_EEPROM_DATA_H_

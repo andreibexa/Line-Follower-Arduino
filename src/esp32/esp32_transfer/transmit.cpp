@@ -5,10 +5,8 @@
  *
  */
 void requestLineFollowerSettings() {
-  ESP32Transfer.sendData(1, PacketId::kLocalLineFollowerSettings);
-
+  serialTransfer.sendData(1, PacketId::kLocalLineFollowerSettings);
   Serial.println("Request lineFollowerSettings from Jade");
-  Serial.println();
 }
 
 /**
@@ -18,6 +16,7 @@ void requestLineFollowerSettings() {
 void transmitLineFollowerSettings() {
   // Inverse the local variables with the received values
   lineFollowerSettings.lineFollowerMode = lineFollowerMode;
+  lineFollowerSettings.avoidObstacleMode = avoidObstacleMode;
   lineFollowerSettings.baseSpeed = baseSpeed;
   lineFollowerSettings.maxSpeed = maxSpeed;
   lineFollowerSettings.minSpeed = minSpeed;
@@ -26,6 +25,8 @@ void transmitLineFollowerSettings() {
   Serial.println("Transmit lineFollowerSettings to Jade:");
   Serial.print("lineFollowerMode ");
   Serial.println(lineFollowerSettings.lineFollowerMode);
+  Serial.print("avoidObstacleMode ");
+  Serial.println(lineFollowerSettings.avoidObstacleMode);
   Serial.print("minSpeed ");
   Serial.println(lineFollowerSettings.minSpeed);
   Serial.print("baseSpeed ");
@@ -37,25 +38,16 @@ void transmitLineFollowerSettings() {
   Serial.println();
 
   uint16_t sendSize = 0;
-  sendSize = ESP32Transfer.txObj(lineFollowerSettings, sendSize);
-  ESP32Transfer.sendData(sendSize, PacketId::kCloudLineFollowerSettings);
+  sendSize = serialTransfer.txObj(lineFollowerSettings, sendSize);
+  serialTransfer.sendData(sendSize, PacketId::kCloudLineFollowerSettings);
 }
 
-
 /**
- * @brief Transmit the system status, WiFi connections status and Arduino Cloud status
+ * @brief Transmit the esp32Status to Jade, WiFi and Cloud status
  *
  */
-void transmitSystemStatus() {
-  unsigned long currentTime = millis();
-  unsigned long startTime = currentTime;
-  uint16_t period = 1000;
-
-  if (currentTime - startTime > period) {
-    refreshSystemStatus();
-
-    uint16_t sendSize = 0;
-    sendSize = ESP32Transfer.txObj(systemStatus, sendSize);
-    ESP32Transfer.sendData(sendSize, PacketId::kSystemStatus);
-  }
+void transmitESP32Status() {
+  uint16_t sendSize = 0;
+  sendSize = serialTransfer.txObj(esp32Status, sendSize);
+  serialTransfer.sendData(sendSize, PacketId::kESP32Status);
 }
