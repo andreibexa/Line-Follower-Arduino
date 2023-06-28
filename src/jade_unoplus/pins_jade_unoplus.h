@@ -12,7 +12,8 @@
 #define MOTOR_LEFT_FORWARD_PIN 6    // M2(A) - PWM PIN
 #define MOTOR_LEFT_BACKWARD_PIN 7   // M2(B)
 
-// #define PIN 8
+// Buzzer
+#define BUZZER_PIN 8
 
 // Multicolor led
 #define RED_PIN 5    // RED - PWM PIN
