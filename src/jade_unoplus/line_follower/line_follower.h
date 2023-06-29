@@ -5,6 +5,7 @@
 #include "jade_unoplus/line_follower/control_direction.h"
 #include "jade_unoplus/multicolor_led/multicolor_led.h"
 #include "jade_unoplus/jade_transfer/transmit.h"
+#include "jade_unoplus/tone/tone.h"
 #include "jade_unoplus/pins_jade_unoplus.h"
 #include <Arduino.h>
 

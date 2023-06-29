@@ -3,17 +3,15 @@
 
 #include <Arduino.h>
 
-// #define PIN 2
-
 // Dual-Channel H-Bridge Motor Driver Module - L9110S
 #define MOTOR_RIGHT_FORWARD_PIN 3   // M1(A) - PWM PIN
 #define MOTOR_RIGHT_BACKWARD_PIN 4  //  M1(B)
 
-#define MOTOR_LEFT_FORWARD_PIN 6    // M2(A) - PWM PIN
-#define MOTOR_LEFT_BACKWARD_PIN 7   // M2(B)
+#define MOTOR_LEFT_FORWARD_PIN 6   // M2(A) - PWM PIN
+#define MOTOR_LEFT_BACKWARD_PIN 7  // M2(B)
 
 // Buzzer
-#define BUZZER_PIN 8
+#define BUZZER_PIN 8  // PWM PIN
 
 // Multicolor led
 #define RED_PIN 5    // RED - PWM PIN
@@ -43,4 +41,4 @@
 #define LCD_SDA_PIN A4  // SDA
 #define LCD_SCL_PIN A5  // SCL
 
-#endif                  // JADE_UNOPLUS_PINS_JADE_UNOPLUS_H_
+#endif  // JADE_UNOPLUS_PINS_JADE_UNOPLUS_H_

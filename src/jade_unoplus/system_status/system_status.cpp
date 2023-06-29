@@ -1,4 +1,5 @@
 #include "jade_unoplus/system_status/system_status.h"
+#include "jade_unoplus/tone/tone.h"
 
 /**
  * @brief Setup system status
@@ -43,6 +44,7 @@ void handleStatusFromESP32() {
     } else if (esp32Status.cloud == 1) {  // Cloud connected
       displayWiFiConnected(esp32Status.wifiSignalStrength);
       charCloudConnected();
+      playSequence(S_CONNECTION);
       // Turn on the multicolor led with purple
       setMultiColorLed(1, 0, 1, false);
     }

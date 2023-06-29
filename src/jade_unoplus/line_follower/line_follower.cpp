@@ -46,13 +46,14 @@ void loopLineFollower() {
  */
 void runLineFollower() {
   isRunning = true;
-  Serial.println(lineFollowerSettings.lineFollowerMode);
+
+  playSequence(S_BUTTON_PUSHED);
 
   // Change the led color to Green
   setMultiColorLed(0, 3, 0, false);
 
   readLinePosition();
-  /*
+
   // Avoid obstacle closer than 30 cm
   if (lineFollowerSettings.avoidObstacleMode == true) {
     avoidObstacle(30);
@@ -67,7 +68,7 @@ void runLineFollower() {
   // Stop the line follower when all sensors detect a horizontal black line.
   if (numDetectedLineSensor == 0) {
     stopLineFollower();
-  } */
+  }
 }
 
 /**
@@ -81,6 +82,8 @@ void stopLineFollower() {
   }
 
   isRunning = false;
+
+  playSequence(S_SLEEPING);
 
   // Stop both motors
   setDirection(STOP_SLOW, 0);
@@ -205,6 +208,8 @@ void readLinePosition() {
  */
 void avoidObstacle(uint8_t minObstacleDistance) {
   if (getDistance() < minObstacleDistance) {
+    playSequence(S_CONFUSED);
+
     // Stop if obstacle is detected
     setDirection(STOP_FAST, 255);
     delay(800);
@@ -220,7 +225,7 @@ void avoidObstacle(uint8_t minObstacleDistance) {
     setDirection(RIGHT_WIDE_FORWARD, 200);
     delay(100);
 
-    // Forward at 45 degree
+    // Go forward at 45 degree
     setDirection(FORWARD, 255);
     delay(900);
 

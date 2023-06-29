@@ -8,7 +8,6 @@
 #include "jade_unoplus/lcd/lcd.h"
 #include "jade_unoplus/system_status/system_status.h"
 
-
 /**
  * @brief Set pin mode for the Jade Uno+ board
  *
@@ -33,6 +32,9 @@ void setPinsMode() {
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
+
+  // Buzzer
+  pinMode(BUZZER_PIN, OUTPUT);
 
   // Line follower pushup button (On/Off)
   pinMode(LINE_FOLLOWER_BUTTON_PIN, INPUT);
