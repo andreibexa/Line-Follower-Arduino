@@ -23,9 +23,13 @@ void receiveLineFollowerSettings() {
       || baseSpeed != lineFollowerSettings.baseSpeed
       || maxSpeed != lineFollowerSettings.maxSpeed || kp != lineFollowerSettings.kp) {
     saveLineFollowerSettings();
+
+    // Play a sound
+    playSequence(S_BUTTON_PUSHED);
   }
 
-/*   Serial.println("Receive lineFollowerSettings from ESP32:");
+
+  /*   Serial.println("Receive lineFollowerSettings from ESP32:");
   Serial.print("lineFollowerMode ");
   Serial.println(lineFollowerSettings.lineFollowerMode);
   Serial.print("avoidObstacleMode ");
@@ -49,4 +53,19 @@ void receiveESP32Status() {
   // Receive the esp32Status
   uint16_t recSize = 0;
   serialTransfer.rxObj(esp32Status, recSize);
+}
+
+
+/**
+ * @brief Receive the direction of the remote control
+ *
+ */
+void receiveDirection() {
+  // Receive direction command
+  uint16_t recSize = 0;
+  uint8_t direction = 0;
+  serialTransfer.rxObj(direction, recSize);
+
+  // Change the direction and speed
+  setDirection(direction, 200);
 }

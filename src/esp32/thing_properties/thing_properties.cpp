@@ -5,13 +5,19 @@
 char SSID[32];  // Network SSID (name)
 char PASS[63];  // Network password (use for WPA, or use as key for WEP)
 
-
+// Line follower settings
 bool lineFollowerMode;
 bool avoidObstacleMode;
 int minSpeed;
 int maxSpeed;
 int baseSpeed;
 float kp;
+
+// Remote control
+bool moveBackward;
+bool moveForward;
+bool moveLeft;
+bool moveRight;
 
 /*
   Since LineFollowerMode is READ_WRITE variable, onLineFollowerModeChange() is
@@ -79,6 +85,59 @@ void onKpChange() {
   Serial.println(kp);
 }
 
+
+void onMoveBackwardChange() {
+  // Add your code here to act upon MoveBackward change
+  if (moveBackward) {
+    transmitDirection(BACKWARD);
+    return;
+  }
+
+  transmitDirection(STOP_SLOW);
+}
+
+/*
+  Since MoveForward is READ_WRITE variable, onMoveForwardChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onMoveForwardChange() {
+  // Add your code here to act upon MoveForward change
+  if (moveForward) {
+    transmitDirection(FORWARD);
+    return;
+  }
+
+  transmitDirection(STOP_SLOW);
+}
+
+/*
+  Since MoveLeft is READ_WRITE variable, onMoveLeftChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onMoveLeftChange() {
+  // Add your code here to act upon MoveLeft change
+  if (moveLeft) {
+    transmitDirection(LEFT_WIDE_FORWARD);
+    return;
+  }
+
+  transmitDirection(STOP_SLOW);
+}
+
+/*
+  Since MoveRight is READ_WRITE variable, onMoveRightChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onMoveRightChange() {
+  // Add your code here to act upon MoveRight change
+  if (moveRight) {
+    transmitDirection(RIGHT_WIDE_FORWARD);
+    return;
+  }
+
+  transmitDirection(STOP_SLOW);
+}
+
 /**
  * @brief On first Arduino Cloud Sync - synchronize local variables with cloud
  * variables
@@ -94,8 +153,11 @@ void onIoTSync() {
   ArduinoCloud.addProperty(maxSpeed, READWRITE, ON_CHANGE, onMaxSpeedChange);
   ArduinoCloud.addProperty(minSpeed, READWRITE, ON_CHANGE, onMinSpeedChange);
   ArduinoCloud.addProperty(avoidObstacleMode, READWRITE, ON_CHANGE, onAvoidObstacleModeChange);
-  ArduinoCloud.addProperty(
-    lineFollowerMode, READWRITE, ON_CHANGE, onLineFollowerModeChange, 3);
+  ArduinoCloud.addProperty(lineFollowerMode, READWRITE, ON_CHANGE, onLineFollowerModeChange);
+  ArduinoCloud.addProperty(moveBackward, READWRITE, ON_CHANGE, onMoveBackwardChange);
+  ArduinoCloud.addProperty(moveForward, READWRITE, ON_CHANGE, onMoveForwardChange);
+  ArduinoCloud.addProperty(moveLeft, READWRITE, ON_CHANGE, onMoveLeftChange);
+  ArduinoCloud.addProperty(moveRight, READWRITE, ON_CHANGE, onMoveRightChange);
 }
 
 /**

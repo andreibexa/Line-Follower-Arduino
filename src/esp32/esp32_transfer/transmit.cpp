@@ -51,3 +51,16 @@ void transmitESP32Status() {
   sendSize = serialTransfer.txObj(esp32Status, sendSize);
   serialTransfer.sendData(sendSize, PacketId::kESP32Status);
 }
+
+
+/**
+ * @brief Transmit the direction of the remote control
+ *
+ * @param direction
+ *
+ */
+void transmitDirection(uint8_t direction) {
+  uint16_t sendSize = 0;
+  sendSize = serialTransfer.txObj(direction, sendSize);
+  serialTransfer.sendData(sendSize, PacketId::kRemoteControlDirection);
+}

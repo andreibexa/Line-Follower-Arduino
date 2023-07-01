@@ -25,4 +25,12 @@ void transmitLineFollowerSettings();
  */
 void transmitESP32Status();
 
+/**
+ * @brief Transmit the direction of the remote control
+ *
+ * @param direction
+ *
+ */
+void transmitDirection(uint8_t direction);
+
 #endif  // ESP32_ESP32_TRANSFER_TRANSMIT_H_

@@ -35,7 +35,7 @@
 #define IR_TRACKING_SENSOR_RIGHT_PIN A2   // OTR
 
 // AA Battery voltage divider
-#define AA_BATTERY_VOLTAGE_PIN A7
+#define AA_BATTERY_VOLTAGE_PIN A3
 
 // LCD Display 1602 + I2C
 #define LCD_SDA_PIN A4  // SDA

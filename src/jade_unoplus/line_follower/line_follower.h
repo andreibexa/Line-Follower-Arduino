@@ -24,6 +24,12 @@ void initializeLineFollowerSettings();
 void runLineFollower();
 
 /**
+ * @brief Check if finish line is detected
+ *
+ */
+void checkFinishLine();
+
+/**
  * @brief Stop Line Follower
  *
  */

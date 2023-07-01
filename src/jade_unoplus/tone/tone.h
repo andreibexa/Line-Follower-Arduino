@@ -8,7 +8,7 @@
 #define S_CONNECTION 0
 #define S_BUTTON_PUSHED 1
 #define S_SLEEPING 2
-#define S_CONFUSED 1
+#define S_CONFUSED 3
 
 /**
  * @brief Play a tone

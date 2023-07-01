@@ -8,11 +8,8 @@ SoftwareSerial Serial2(RX_PIN, TX_PIN);
 // the enum PacketId in the include/enum_packet_id.h file. This ensures that the
 // correct callback function is called when a specific packet with a
 // corresponding PacketId is received.
-const functionPtr callbackArr[] = {
-  transmitLineFollowerSettings,
-  receiveLineFollowerSettings,
-  receiveESP32Status,
-};
+const functionPtr callbackArr[] = { transmitLineFollowerSettings, receiveLineFollowerSettings,
+                                    receiveESP32Status, receiveDirection };
 
 /**
  * @brief Config Serial Transfer

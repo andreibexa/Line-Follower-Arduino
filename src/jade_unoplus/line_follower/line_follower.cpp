@@ -45,12 +45,15 @@ void loopLineFollower() {
  *
  */
 void runLineFollower() {
+  if (isRunning == false) {
+    // Play a sound when the line follower starts
+    playSequence(S_BUTTON_PUSHED);
+  }
+
   isRunning = true;
 
-  playSequence(S_BUTTON_PUSHED);
-
   // Change the led color to Green
-  setMultiColorLed(0, 3, 0, false);
+  setMultiColorLed(0, 10, 0, false);
 
   readLinePosition();
 
@@ -65,8 +68,22 @@ void runLineFollower() {
   // Calculate error position and follow the line
   calculatePID();
 
+  // Check if finish line is detected
+  checkFinishLine();
+}
+
+/**
+ * @brief Check if finish line is detected
+ *
+ */
+void checkFinishLine() {
+  unsigned long currentTime = millis();
+  static unsigned long previousTime = 0;
+
   // Stop the line follower when all sensors detect a horizontal black line.
-  if (numDetectedLineSensor == 0) {
+  // Avoid stopping if crossing an intersection
+  if (numDetectedLineSensor == 0 && (currentTime - previousTime) > 200) {
+    previousTime = currentTime;
     stopLineFollower();
   }
 }
@@ -89,7 +106,7 @@ void stopLineFollower() {
   setDirection(STOP_SLOW, 0);
 
   // Change the led color to Red
-  setMultiColorLed(3, 0, 0, false);
+  setMultiColorLed(10, 0, 0, false);
 
   // Send the lineFollowerMode status to Arduino Cloud
   lineFollowerSettings.lineFollowerMode = false;

@@ -8,7 +8,7 @@
 void setupSystemStatus() {
   displayWiFiDisconnected();
   // Blink the multicolor led with blue color
-  setMultiColorLed(0, 0, 1, true);
+  setMultiColorLed(0, 0, 8, true);
 }
 
 /**
@@ -35,18 +35,18 @@ void handleStatusFromESP32() {
     if (esp32Status.wifi != 3) {  // WiFi connecting ...
       displayWiFiDisconnected();
       // Blink the multicolor led with blue color
-      setMultiColorLed(0, 0, 1, true);
+      setMultiColorLed(0, 0, 8, true);
     } else if (esp32Status.cloud == 0) {  // Cloud connecting ...
       displayWiFiConnected(esp32Status.wifiSignalStrength);
       charCloudDisconnected();
       // Blink the multicolor led with pink color
-      setMultiColorLed(1, 0, 1, true);
+      setMultiColorLed(1, 0, 8, true);
     } else if (esp32Status.cloud == 1) {  // Cloud connected
       displayWiFiConnected(esp32Status.wifiSignalStrength);
       charCloudConnected();
       playSequence(S_CONNECTION);
       // Turn on the multicolor led with purple
-      setMultiColorLed(1, 0, 1, false);
+      setMultiColorLed(1, 0, 8, false);
     }
 
     // Update the temporary variables

@@ -1,10 +1,11 @@
-#ifndef INCLUDE_TRANSFER_ENUM_PACKET_ID_H_
-#define INCLUDE_TRANSFER_ENUM_PACKET_ID_H_
+#ifndef INCLUDE_SERIAL_TRANSFER_ENUM_PACKET_ID_H_
+#define INCLUDE_SERIAL_TRANSFER_ENUM_PACKET_ID_H_
 
 enum PacketId {
   kLocalLineFollowerSettings,
   kCloudLineFollowerSettings,
-  kESP32Status
+  kESP32Status,
+  kRemoteControlDirection,
 };
 
-#endif  // INCLUDE_TRANSFER_ENUM_PACKET_ID_H_
+#endif  // INCLUDE_SERIAL_TRANSFER_ENUM_PACKET_ID_H_

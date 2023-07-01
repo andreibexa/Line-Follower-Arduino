@@ -2,6 +2,7 @@
 #define JADE_UNOPLUS_JADE_TRANSFER_RECEIVE_H_
 
 #include "serial_transfer/struct_line_follower_settings.h"
+#include "serial_transfer/enum_direction.h"
 #include "serial_transfer/struct_esp32_status.h"
 #include "jade_unoplus/line_follower/line_follower.h"
 #include "jade_unoplus/eeprom_data/eeprom_data.h"
@@ -17,5 +18,11 @@ void receiveLineFollowerSettings();
  *
  */
 void receiveESP32Status();
+
+/**
+ * @brief Receive the direction of the remote control
+ *
+ */
+void receiveDirection();
 
 #endif  // JADE_UNOPLUS_JADE_TRANSFER_RECEIVE_H_

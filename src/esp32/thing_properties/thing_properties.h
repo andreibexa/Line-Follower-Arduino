@@ -2,17 +2,25 @@
 #define ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
 
 #include "esp32/esp32_transfer/transmit.h"
+#include "serial_transfer/enum_direction.h"
 #include "esp32/secrets.h"
 #include <ArduinoIoTCloud.h>
 
 extern WiFiConnectionHandler ArduinoIoTPreferredConnection;
 
+// Line follower settings
 extern bool lineFollowerMode;
 extern bool avoidObstacleMode;
 extern int minSpeed;
 extern int baseSpeed;
 extern int maxSpeed;
 extern float kp;
+
+// Remote control
+extern bool moveBackward;
+extern bool moveForward;
+extern bool moveLeft;
+extern bool moveRight;
 
 /*
   Since LineFollowerMode is READ_WRITE variable, onLineFollowerModeChange() is
