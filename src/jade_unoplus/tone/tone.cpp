@@ -61,11 +61,7 @@ void playSequence(uint8_t sequence) {
       playTone(NOTE_E6, 55, 25);
       playTone(NOTE_A6, 60, 10);
       break;
-    case S_BUTTON_PUSHED:
-      bendTones(NOTE_E6, NOTE_G6, 1.03, 20, 2);
-      delay(30);
-      bendTones(NOTE_E6, NOTE_D7, 1.04, 10, 2);
-      break;
+    case S_BUTTON_PUSHED: bendTones(NOTE_E6, NOTE_D7, 1.04, 10, 2); break;
     case S_SLEEPING:
       bendTones(100, 500, 1.04, 10, 10);
       delay(500);

@@ -41,6 +41,8 @@ void setMultiColorLed(uint8_t r, uint8_t g, uint8_t b, bool blink) {
   ledColorGreen = g;
   ledColorBlue = b;
   ledBlink = blink;
+
+  changePINvalue(r, g, b);
 }
 
 /*
@@ -49,7 +51,6 @@ void setMultiColorLed(uint8_t r, uint8_t g, uint8_t b, bool blink) {
 */
 void toggleLedBlink() {
   if (ledBlink == false) {
-    changePINvalue(ledColorRed, ledColorGreen, ledColorBlue);
     return;
   }
 
@@ -58,6 +59,7 @@ void toggleLedBlink() {
   static bool isLedOn = false;
 
   if (currentTime - startTime >= 600) {
+
     isLedOn = !isLedOn;
     // Turn off the LED for 600ms
     if (isLedOn) {

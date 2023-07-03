@@ -6,19 +6,15 @@
  * @return distance The distance in centimeters.
  */
 float getDistance() {
-  static float distance;
-  // Variable to store the previous time
-  static unsigned long previousMillis = 0;
-
-  // Wait interval between measurements (in milliseconds)
-  const long interval = 50;
+  float distance;
 
   // Get the current time
   unsigned long currentMillis = millis();
+  static unsigned long previousMillis = 0;
+  const long interval = 500;
 
   // Check if the interval has passed
   if (currentMillis - previousMillis >= interval) {
-    // Update the previous time
     previousMillis = currentMillis;
 
     // Send an ultrasonic signal

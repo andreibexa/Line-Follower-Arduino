@@ -100,17 +100,17 @@ void stopLineFollower() {
 
   isRunning = false;
 
-  playSequence(S_SLEEPING);
-
   // Stop both motors
   setDirection(STOP_SLOW, 0);
 
   // Change the led color to Red
-  setMultiColorLed(10, 0, 0, false);
+  setMultiColorLed(10, 0, 0);
 
   // Send the lineFollowerMode status to Arduino Cloud
   lineFollowerSettings.lineFollowerMode = false;
   transmitLineFollowerSettings();
+
+  playSequence(S_SLEEPING);
 }
 
 /**
@@ -147,6 +147,8 @@ void calculatePID() {
   digitalWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
   analogWrite(MOTOR_RIGHT_FORWARD_PIN, motorRightSpeed);
   digitalWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
+
+  // SerialPrintPosition(motorLeftSpeed, motorRightSpeed);
 }
 
 /**
@@ -225,11 +227,10 @@ void readLinePosition() {
  */
 void avoidObstacle(uint8_t minObstacleDistance) {
   if (getDistance() < minObstacleDistance) {
-    playSequence(S_CONFUSED);
-
     // Stop if obstacle is detected
     setDirection(STOP_FAST, 255);
-    delay(800);
+    playSequence(S_CONFUSED);
+    delay(1500);
 
     readLinePosition();
     // Turn right till the left IR sensor is under the line
@@ -259,9 +260,11 @@ void avoidObstacle(uint8_t minObstacleDistance) {
       readLinePosition();
     }
 
-    // Stop if the line is detected
+    // Stop if the line is detected.
     setDirection(STOP_FAST, 255);
-    delay(800);
+
+    // Don't stop in the intersection
+    delay(1900);
   }
 }
 
