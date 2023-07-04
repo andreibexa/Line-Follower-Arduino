@@ -6,7 +6,6 @@
  */
 void requestLineFollowerSettings() {
   serialTransfer.sendData(1, PacketId::kLocalLineFollowerSettings);
-  Serial.println("Request lineFollowerSettings from Jade");
 }
 
 /**
@@ -21,21 +20,6 @@ void transmitLineFollowerSettings() {
   lineFollowerSettings.maxSpeed = maxSpeed;
   lineFollowerSettings.minSpeed = minSpeed;
   lineFollowerSettings.kp = kp;
-
-  Serial.println("Transmit lineFollowerSettings to Jade:");
-  Serial.print("lineFollowerMode ");
-  Serial.println(lineFollowerSettings.lineFollowerMode);
-  Serial.print("avoidObstacleMode ");
-  Serial.println(lineFollowerSettings.avoidObstacleMode);
-  Serial.print("minSpeed ");
-  Serial.println(lineFollowerSettings.minSpeed);
-  Serial.print("baseSpeed ");
-  Serial.println(lineFollowerSettings.baseSpeed);
-  Serial.print("maxSpeed ");
-  Serial.println(lineFollowerSettings.maxSpeed);
-  Serial.print("kp ");
-  Serial.println(lineFollowerSettings.kp);
-  Serial.println();
 
   uint16_t sendSize = 0;
   sendSize = serialTransfer.txObj(lineFollowerSettings, sendSize);
