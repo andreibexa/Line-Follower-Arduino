@@ -4,5 +4,6 @@
 .vscode/launch.json
 .vscode/ipch
 .vscode/settings.json
-src/esp32/secrets.h
+src/esp32/thing_properties/secrets.h
+src/esp32/thing_properties/secrets.cpp
 compile_commands.json

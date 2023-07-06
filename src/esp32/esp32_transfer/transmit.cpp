@@ -13,16 +13,13 @@ void requestLineFollowerSettings() {
  *
  */
 void transmitLineFollowerSettings() {
-  // Inverse the local variables with the received values
-  lineFollowerSettings.lineFollowerMode = lineFollowerMode;
-  lineFollowerSettings.avoidObstacleMode = avoidObstacleMode;
-  lineFollowerSettings.baseSpeed = baseSpeed;
-  lineFollowerSettings.maxSpeed = maxSpeed;
-  lineFollowerSettings.minSpeed = minSpeed;
-  lineFollowerSettings.kp = kp;
-
   uint16_t sendSize = 0;
-  sendSize = serialTransfer.txObj(lineFollowerSettings, sendSize);
+  sendSize = serialTransfer.txObj(lineFollowerMode, sendSize);
+  sendSize = serialTransfer.txObj(avoidObstacleMode, sendSize);
+  sendSize = serialTransfer.txObj(baseSpeed, sendSize);
+  sendSize = serialTransfer.txObj(maxSpeed, sendSize);
+  sendSize = serialTransfer.txObj(minSpeed, sendSize);
+  sendSize = serialTransfer.txObj(kp, sendSize);
   serialTransfer.sendData(sendSize, PacketId::kCloudLineFollowerSettings);
 }
 

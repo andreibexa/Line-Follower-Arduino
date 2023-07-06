@@ -8,41 +8,29 @@ STRUCT_ESP32_STATUS esp32Status;
  */
 void receiveLineFollowerSettings() {
   // Create a copy of the current settings
-  bool avoidObstacleMode = lineFollowerSettings.avoidObstacleMode;
-  uint8_t minSpeed = lineFollowerSettings.minSpeed;
-  uint8_t baseSpeed = lineFollowerSettings.baseSpeed;
-  uint8_t maxSpeed = lineFollowerSettings.maxSpeed;
-  float kp = lineFollowerSettings.kp;
+  bool avoidObstacleModeTmp = avoidObstacleMode;
+  int minSpeedTmp = minSpeed;
+  int baseSpeedTmp = baseSpeed;
+  int maxSpeedTmp = maxSpeed;
+  float kpTmp = kp;
 
   // Receive the new settings
-  serialTransfer.rxObj(lineFollowerSettings);
+  uint16_t recSize = 0;
+  recSize = serialTransfer.rxObj(lineFollowerMode, recSize);
+  recSize = serialTransfer.rxObj(avoidObstacleMode, recSize);
+  recSize = serialTransfer.rxObj(baseSpeed, recSize);
+  recSize = serialTransfer.rxObj(maxSpeed, recSize);
+  recSize = serialTransfer.rxObj(minSpeed, recSize);
+  recSize = serialTransfer.rxObj(kp, recSize);
 
-  // Save lineFollowerSettings to EEPROM
-  if (avoidObstacleMode != lineFollowerSettings.avoidObstacleMode
-      || minSpeed != lineFollowerSettings.minSpeed
-      || baseSpeed != lineFollowerSettings.baseSpeed
-      || maxSpeed != lineFollowerSettings.maxSpeed || kp != lineFollowerSettings.kp) {
+  // Save line follower settings to EEPROM
+  if (avoidObstacleModeTmp != avoidObstacleMode || minSpeedTmp != minSpeed
+      || baseSpeedTmp != baseSpeed || maxSpeedTmp != maxSpeed || kpTmp != kp) {
     saveLineFollowerSettings();
 
     // Play a sound
     playSequence(S_BUTTON_PUSHED);
   }
-
-
-  /*   Serial.println("Receive lineFollowerSettings from ESP32:");
-  Serial.print("lineFollowerMode ");
-  Serial.println(lineFollowerSettings.lineFollowerMode);
-  Serial.print("avoidObstacleMode ");
-  Serial.println(lineFollowerSettings.avoidObstacleMode);
-  Serial.print("minSpeed ");
-  Serial.println(lineFollowerSettings.minSpeed);
-  Serial.print("baseSpeed ");
-  Serial.println(lineFollowerSettings.baseSpeed);
-  Serial.print("maxSpeed ");
-  Serial.println(lineFollowerSettings.maxSpeed);
-  Serial.print("kp ");
-  Serial.println(lineFollowerSettings.kp);
-  Serial.println(); */
 }
 
 /**

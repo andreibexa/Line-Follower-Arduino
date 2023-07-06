@@ -1,6 +1,7 @@
 #ifndef JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 #define JADE_UNOPLUS_LINE_FOLLOWER_LINE_FOLLOWER_H_
 
+#include "serial_transfer/line_follower_settings.h"
 #include "jade_unoplus/obstacle_detector/obstacle_detector.h"
 #include "jade_unoplus/line_follower/control_direction.h"
 #include "jade_unoplus/multicolor_led/multicolor_led.h"

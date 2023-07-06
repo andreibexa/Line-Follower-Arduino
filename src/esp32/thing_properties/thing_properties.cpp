@@ -1,4 +1,4 @@
-#include <esp32/thing_properties/thing_properties.h>
+#include "esp32/thing_properties/thing_properties.h"
 
 // The bellow code is adapted from Arduino IoT Cloud - https://cloud.arduino.com
 

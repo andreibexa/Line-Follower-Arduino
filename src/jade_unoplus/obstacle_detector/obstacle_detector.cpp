@@ -11,7 +11,7 @@ float getDistance() {
   // Get the current time
   unsigned long currentMillis = millis();
   static unsigned long previousMillis = 0;
-  const long interval = 500;
+  const long interval = 100;
 
   // Check if the interval has passed
   if (currentMillis - previousMillis >= interval) {

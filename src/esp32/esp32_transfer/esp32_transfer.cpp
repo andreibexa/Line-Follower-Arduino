@@ -9,9 +9,6 @@ SerialTransfer serialTransfer;
 // corresponding PacketId is received.
 const functionPtr callbackArr[] = { receiveLineFollowerSettings };
 
-// This struct holds the lineFollowerSettings
-STRUCT_LINE_FOLLOWER_SETTINGS lineFollowerSettings;
-
 /**
  * @brief Config Serial Transfer
  *

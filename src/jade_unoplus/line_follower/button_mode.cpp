@@ -32,7 +32,7 @@ void debounceLineFollowerButton() {
       // Only toggle the LED if the new button state is HIGH
       if (buttonState == HIGH) {
         // Button was pressed
-        lineFollowerSettings.lineFollowerMode = !lineFollowerSettings.lineFollowerMode;
+        lineFollowerMode = !lineFollowerMode;
       }
     }
   }

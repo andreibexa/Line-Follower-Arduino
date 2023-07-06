@@ -12,11 +12,11 @@ void initializeEEPROM() {
   }
 
   // Get EEPROM data
-  EEPROM.get(0, lineFollowerSettings.baseSpeed);
-  EEPROM.get(1, lineFollowerSettings.minSpeed);
-  EEPROM.get(2, lineFollowerSettings.maxSpeed);
-  EEPROM.get(3, lineFollowerSettings.kp);
-  EEPROM.get(4, lineFollowerSettings.avoidObstacleMode);
+  EEPROM.get(0, baseSpeed);
+  EEPROM.get(1, minSpeed);
+  EEPROM.get(2, maxSpeed);
+  EEPROM.get(3, kp);
+  EEPROM.get(4, avoidObstacleMode);
 }
 
 /**
@@ -24,25 +24,11 @@ void initializeEEPROM() {
  *
  */
 void saveLineFollowerSettings() {
-  EEPROM.put(0, lineFollowerSettings.baseSpeed);
-  EEPROM.put(1, lineFollowerSettings.minSpeed);
-  EEPROM.put(2, lineFollowerSettings.maxSpeed);
-  EEPROM.put(3, lineFollowerSettings.kp);
-  EEPROM.put(4, lineFollowerSettings.avoidObstacleMode);
+  EEPROM.put(0, baseSpeed);
+  EEPROM.put(1, minSpeed);
+  EEPROM.put(2, maxSpeed);
+  EEPROM.put(3, kp);
+  EEPROM.put(4, avoidObstacleMode);
 
-  Serial.println("Saving to EEPROM");
-  /*
-  Serial.print("lineFollowerMode ");
-  Serial.println(lineFollowerSettings.lineFollowerMode);
-  Serial.print("avoidObstacleMode ");
-  Serial.println(lineFollowerSettings.avoidObstacleMode);
-  Serial.print("minSpeed ");
-  Serial.println(lineFollowerSettings.minSpeed);
-  Serial.print("baseSpeed ");
-  Serial.println(lineFollowerSettings.baseSpeed);
-  Serial.print("maxSpeed ");
-  Serial.println(lineFollowerSettings.maxSpeed);
-  Serial.print("kp ");
-  Serial.println(lineFollowerSettings.kp);
-  */
+  Serial.println("Save line follower settings to EEPROM");
 }

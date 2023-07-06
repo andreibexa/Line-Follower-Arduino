@@ -1,20 +1,14 @@
 #ifndef ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
 #define ESP32_THING_PROPERTIES_THING_PROPERTIES_H_
 
+#include "esp32/thing_properties/secrets.h"
 #include "esp32/esp32_transfer/transmit.h"
+#include "esp32/esp32_transfer/receive.h"
 #include "serial_transfer/enum_direction.h"
-#include "esp32/secrets.h"
+#include "serial_transfer/line_follower_settings.h"
 #include <ArduinoIoTCloud.h>
 
 extern WiFiConnectionHandler ArduinoIoTPreferredConnection;
-
-// Line follower settings
-extern bool lineFollowerMode;
-extern bool avoidObstacleMode;
-extern int minSpeed;
-extern int baseSpeed;
-extern int maxSpeed;
-extern float kp;
 
 // Remote control
 extern bool moveBackward;

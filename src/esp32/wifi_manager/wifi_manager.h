@@ -3,7 +3,7 @@
 
 #include <HTTPClient.h>
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
-#include <esp32/thing_properties/thing_properties.h>
+#include "esp32/thing_properties/thing_properties.h"
 
 // [HTTP] handle route /line-follower
 void routeLineFollower();

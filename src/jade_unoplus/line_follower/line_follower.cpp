@@ -5,8 +5,12 @@ byte lineSensorValues[lineSensorCount];
 uint8_t numDetectedLineSensor;
 uint16_t currentPosition;
 
-// Line follower settings - defined in src/jade_unoplus/jade_transfer/struct_line_follower_settings.h
-STRUCT_LINE_FOLLOWER_SETTINGS lineFollowerSettings;
+bool lineFollowerMode;
+bool avoidObstacleMode;
+int minSpeed;
+int baseSpeed;
+int maxSpeed;
+float kp;
 
 // Initial line follower settings
 const bool defaultMode = false;
@@ -21,19 +25,19 @@ bool isRunning = false;
 
 // Initialize the line follower settings with default values
 void initializeLineFollowerSettings() {
-  lineFollowerSettings.lineFollowerMode = defaultMode;
-  lineFollowerSettings.avoidObstacleMode = defaultAvoidObstacleMode;
-  lineFollowerSettings.minSpeed = defaultMinSpeed;
-  lineFollowerSettings.baseSpeed = defaultBaseSpeed;
-  lineFollowerSettings.maxSpeed = defaultMaxSpeed;
-  lineFollowerSettings.kp = defaultKp;
+  lineFollowerMode = defaultMode;
+  avoidObstacleMode = defaultAvoidObstacleMode;
+  minSpeed = defaultMinSpeed;
+  baseSpeed = defaultBaseSpeed;
+  maxSpeed = defaultMaxSpeed;
+  kp = defaultKp;
 }
 
 /**
  * @brief Run the Line Follower only if lineFollowerMode is true
  */
 void loopLineFollower() {
-  if (lineFollowerSettings.lineFollowerMode == true) {
+  if (lineFollowerMode == true) {
     runLineFollower();
   } else {
     stopLineFollower();
@@ -58,7 +62,7 @@ void runLineFollower() {
   readLinePosition();
 
   // Avoid obstacle closer than 30 cm
-  if (lineFollowerSettings.avoidObstacleMode == true) {
+  if (avoidObstacleMode == true) {
     avoidObstacle(30);
   }
 
@@ -107,7 +111,7 @@ void stopLineFollower() {
   setMultiColorLed(10, 0, 0);
 
   // Send the lineFollowerMode status to Arduino Cloud
-  lineFollowerSettings.lineFollowerMode = false;
+  lineFollowerMode = false;
   transmitLineFollowerSettings();
 
   playSequence(S_SLEEPING);
@@ -119,12 +123,8 @@ void stopLineFollower() {
  *
  */
 void calculatePID() {
-  uint8_t minSpeed = lineFollowerSettings.minSpeed;
-  uint8_t baseSpeed = lineFollowerSettings.baseSpeed;
-  uint8_t maxSpeed = lineFollowerSettings.maxSpeed;
-
   // adjust Kp to get the best results for the line follower
-  float Kp = lineFollowerSettings.kp;
+  float Kp = kp;
   float Kd = 0;
   static int16_t lastError = 0;
 

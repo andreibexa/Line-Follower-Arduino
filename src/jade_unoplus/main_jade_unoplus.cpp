@@ -1,7 +1,7 @@
 #include <Arduino.h>
+#include "jade_unoplus/line_follower/line_follower.h"
 #include "jade_unoplus/eeprom_data/eeprom_data.h"
 #include "jade_unoplus/jade_transfer/jade_transfer.h"
-#include "jade_unoplus/line_follower/line_follower.h"
 #include "jade_unoplus/line_follower/button_mode.h"
 #include "jade_unoplus/multicolor_led/multicolor_led.h"
 #include "jade_unoplus/pins_jade_unoplus.h"
@@ -72,7 +72,6 @@ void setup() {
  *`
  */
 void loop() {
-
   // Multicolor LED loop
   loopMultiColorLed();
 

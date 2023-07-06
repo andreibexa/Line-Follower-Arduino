@@ -1,0 +1,7 @@
+/*
+#ifndef ESP32_THING_PROPERTIES_SECRETS
+#define ESP32_THING_PROPERTIES_SECRETS
+extern const char *DEVICE_LOGIN_NAME;
+extern const char *DEVICE_KEY;
+#endif  // ESP32_THING_PROPERTIES_SECRETS
+*/
