@@ -8,9 +8,9 @@ char PASS[63];  // Network password (use for WPA, or use as key for WEP)
 // Line follower settings
 bool lineFollowerMode;
 bool avoidObstacleMode;
-int minSpeed;
-int maxSpeed;
-int baseSpeed;
+unsigned int minSpeed;
+unsigned int baseSpeed;
+unsigned int maxSpeed;
 float kp;
 
 // Remote control
@@ -138,45 +138,44 @@ void onMoveRightChange() {
   transmitDirection(STOP_SLOW);
 }
 
-/**
- * @brief On first Arduino Cloud Sync - synchronize local variables with cloud
- * variables
- *
+/*
+   On first Arduino Cloud Sync - synchronize local variables with cloud
+  variables
  */
 void onIoTSync() {
+  // Line follower settings
+  ArduinoCloud.addProperty(lineFollowerMode, READWRITE, ON_CHANGE, onLineFollowerModeChange);
+  ArduinoCloud.addProperty(avoidObstacleMode, READWRITE, ON_CHANGE, onAvoidObstacleModeChange);
+  ArduinoCloud.addProperty(minSpeed, READWRITE, ON_CHANGE, onMinSpeedChange);
+  ArduinoCloud.addProperty(baseSpeed, READWRITE, ON_CHANGE, onBaseSpeedChange);
+  ArduinoCloud.addProperty(maxSpeed, READWRITE, ON_CHANGE, onMaxSpeedChange);
+  ArduinoCloud.addProperty(kp, READWRITE, ON_CHANGE, onKpChange);
+}
+
+/*
+  Initialize Arduino Cloud
+*/
+void initThingProperties() {
   // Request the lineFollowerSettings from Jade UnoPlus board
   requestLineFollowerSettings();
 
-  // Line Follower Mode should be always OFF when the board is powered on
-  ArduinoCloud.addProperty(kp, READWRITE, ON_CHANGE, onKpChange);
-  ArduinoCloud.addProperty(baseSpeed, READWRITE, ON_CHANGE, onBaseSpeedChange);
-  ArduinoCloud.addProperty(maxSpeed, READWRITE, ON_CHANGE, onMaxSpeedChange);
-  ArduinoCloud.addProperty(minSpeed, READWRITE, ON_CHANGE, onMinSpeedChange);
-  ArduinoCloud.addProperty(avoidObstacleMode, READWRITE, ON_CHANGE, onAvoidObstacleModeChange);
-  ArduinoCloud.addProperty(lineFollowerMode, READWRITE, ON_CHANGE, onLineFollowerModeChange);
+  // Auth data
+  ArduinoCloud.setBoardId(DEVICE_LOGIN_NAME);
+  ArduinoCloud.setSecretDeviceKey(DEVICE_KEY);
+
+  // Synchronize local variables with cloud variables
+  ArduinoCloud.addCallback(ArduinoIoTCloudEvent::SYNC, onIoTSync);
+
+  // Remote control commands
   ArduinoCloud.addProperty(moveBackward, READWRITE, ON_CHANGE, onMoveBackwardChange);
   ArduinoCloud.addProperty(moveForward, READWRITE, ON_CHANGE, onMoveForwardChange);
   ArduinoCloud.addProperty(moveLeft, READWRITE, ON_CHANGE, onMoveLeftChange);
   ArduinoCloud.addProperty(moveRight, READWRITE, ON_CHANGE, onMoveRightChange);
 }
 
-/**
- * @brief Initialize the properties for Arduino Cloud
- *
- */
-void initThingProperties() {
-  ArduinoCloud.setBoardId(DEVICE_LOGIN_NAME);
-  ArduinoCloud.setSecretDeviceKey(DEVICE_KEY);
-
-  // On first Arduino Cloud Sync - synchronize local variables with cloud
-  // variables
-  ArduinoCloud.addCallback(ArduinoIoTCloudEvent::SYNC, onIoTSync);
-}
-
-/**
- * @brief Copy the SSID and PASS from the WiFi manager
- *
- */
+/*
+  Copy the SSID and PASS from the WiFi manager library
+*/
 void preferredConnectionHandler(char* ssid, char* pass) {
   strcpy(SSID, ssid);
   strcpy(PASS, pass);
@@ -184,4 +183,4 @@ void preferredConnectionHandler(char* ssid, char* pass) {
 
 // Wifi manager extension handles the preferred connection method for Arduino
 // IoT. This line does not affect the wifi connection.
-WiFiConnectionHandler ArduinoIoTPreferredConnection(SSID, PASS);
+WiFiConnectionHandler ArduinoIoTPreferredConnection("none", "none");

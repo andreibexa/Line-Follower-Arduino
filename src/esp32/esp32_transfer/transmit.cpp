@@ -13,14 +13,39 @@ void requestLineFollowerSettings() {
  *
  */
 void transmitLineFollowerSettings() {
+  // Truncate the 32-bit variables to 8 bits by masking with 0xFF
+  uint8_t minSpeed8 = (uint8_t)minSpeed;
+  uint8_t baseSpeed8 = (uint8_t)baseSpeed;
+  uint8_t maxSpeed8 = (uint8_t)maxSpeed;
+
   uint16_t sendSize = 0;
   sendSize = serialTransfer.txObj(lineFollowerMode, sendSize);
   sendSize = serialTransfer.txObj(avoidObstacleMode, sendSize);
-  sendSize = serialTransfer.txObj(baseSpeed, sendSize);
-  sendSize = serialTransfer.txObj(maxSpeed, sendSize);
-  sendSize = serialTransfer.txObj(minSpeed, sendSize);
+  sendSize = serialTransfer.txObj(minSpeed8, sendSize);
+  sendSize = serialTransfer.txObj(baseSpeed8, sendSize);
+  sendSize = serialTransfer.txObj(maxSpeed8, sendSize);
   sendSize = serialTransfer.txObj(kp, sendSize);
+
   serialTransfer.sendData(sendSize, PacketId::kCloudLineFollowerSettings);
+
+  // Serial print all the above received  settings
+  Serial.print("lineFollowerMode ");
+  Serial.println(lineFollowerMode);
+
+  Serial.print("avoidObstacleMode ");
+  Serial.println(avoidObstacleMode);
+
+  Serial.print("minSpeed ");
+  Serial.println(minSpeed);
+
+  Serial.print("baseSpeed ");
+  Serial.println(baseSpeed);
+
+  Serial.print("maxSpeed ");
+  Serial.println(maxSpeed);
+
+  Serial.print("kp ");
+  Serial.println(kp);
 }
 
 /**

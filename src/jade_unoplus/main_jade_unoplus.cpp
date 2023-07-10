@@ -51,9 +51,6 @@ void setup() {
   // Set the pins mode
   setPinsMode();
 
-  // Initialize line follower settings with default settings
-  initializeLineFollowerSettings();
-
   // Initialize EEPROM
   initializeEEPROM();
 

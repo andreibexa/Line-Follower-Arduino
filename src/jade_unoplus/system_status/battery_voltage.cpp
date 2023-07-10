@@ -37,20 +37,21 @@ uint16_t readBoardBatteryVoltage() {
  * @return float
  */
 float readAAbatteryVoltage() {
-  float vin = 0.0;
-  float vout = 0.0;
+  float Vin = 0.0;
+  float Vout = 0.0;
   float r1 = 9810.0;
   float r2 = 9780.0;
+  float boardVoltage = 4.77;
 
   // Read the AA voltage
-  uint16_t analog_value = analogRead(AA_BATTERY_VOLTAGE_PIN);
+  uint16_t analogValue = analogRead(AA_BATTERY_VOLTAGE_PIN);
 
   // Conversion formula
-  vout = (analog_value * 4.77) / 1024.0;
-  vin = vout / (r2 / (r1 + r2));
-  if (vin < 0.1) {
-    vin = 0.0;
+  Vout = (analogValue * boardVoltage) / 1024.0;
+  Vin = Vout / (r2 / (r1 + r2));
+  if (Vin < 0.1) {
+    Vin = 0.0;
   }
 
-  return vin;
+  return Vin;
 }

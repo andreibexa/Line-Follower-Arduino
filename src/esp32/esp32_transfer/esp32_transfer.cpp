@@ -2,7 +2,7 @@
 
 SerialTransfer serialTransfer;
 
-// Array of callbacks.
+// Callbacks.
 // The order of the callbacks in the callbackArr array should match the order of
 // the enum PacketId in the include/enum_packet_id.h file. This ensures that the
 // correct callback function is called when a specific packet with a

@@ -6,8 +6,8 @@ WiFiManager wm;
 
 char const hostname[] = "LINE-FOLLOWER-7598";
 char const password[] = "password";
-char ssid[32];  // SSID char limit
-char pass[63];  // PASS char limit
+// char ssid[32];  // SSID char limit
+// char pass[63];  // PASS char limit
 
 // Setup wifi manager
 void setupWifiManager() {
@@ -19,23 +19,24 @@ void setupWifiManager() {
   // these are stored by the esp library
   // wm.resetSettings();
 
-  // Disable debug
-  wm.setDebugOutput(true);
+  // Debug
+  wm.setDebugOutput(false);
 
   // Set Hostname
   wm.setHostname(hostname);
-
-  String str_ssid = wm.getWiFiSSID(false);
-  String str_pass = wm.getWiFiPass(false);
-
-  // Transmit WiFi ssid and pass to the Arduino Cloud
-  preferredConnectionHandler(ssid, pass);
 
   // Continue, even if not connected to WiFi
   wm.setConfigPortalBlocking(false);
 
   // Set a timeout period for the configuration portal
   wm.setConfigPortalTimeout(180);
+
+  // Arduino Cloud handles the WiFi connection to the router.
+  /*
+    String str_ssid = wm.getWiFiSSID(false);
+    String str_pass = wm.getWiFiPass(false);
+    preferredConnectionHandler(ssid, pass);
+ */
 
   // Automatically connect using saved credentials,
   // if connection fails, it starts an access point with the specified name (

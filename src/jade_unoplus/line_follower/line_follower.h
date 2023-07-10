@@ -44,6 +44,14 @@ void stopLineFollower();
 void calculatePID();
 
 /**
+ * @brief Control the speed of the left and right motors
+ *
+ * @param motorLeftSpeed Motor left speed (0-255)
+ * @param motorLeftSpeed Motor right speed (0-255)
+ */
+void speedControl(uint8_t motorLeftSpeed, uint8_t motorRightSpeed);
+
+/**
  * Out of line. Turn back to the last known position
  *
  * @param motorLeftSpeed

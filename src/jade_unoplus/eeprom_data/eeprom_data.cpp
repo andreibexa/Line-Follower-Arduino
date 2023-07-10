@@ -8,15 +8,27 @@ void initializeEEPROM() {
   byte firstByte = EEPROM.read(0);
 
   if (firstByte == 0xFF) {
+    // Initialize the line follower settings with default settings
+    initializeLineFollowerSettings();
+
+    // Save the line follower settings to EEPROM
     saveLineFollowerSettings();
   }
 
   // Get EEPROM data
-  EEPROM.get(0, baseSpeed);
+  getEEPROMData();
+}
+
+/**
+ * @brief Get EEPROM data
+ *
+ */
+void getEEPROMData() {
+  EEPROM.get(0, avoidObstacleMode);
   EEPROM.get(1, minSpeed);
-  EEPROM.get(2, maxSpeed);
-  EEPROM.get(3, kp);
-  EEPROM.get(4, avoidObstacleMode);
+  EEPROM.get(2, baseSpeed);
+  EEPROM.get(3, maxSpeed);
+  EEPROM.get(4, kp);
 }
 
 /**
@@ -24,11 +36,11 @@ void initializeEEPROM() {
  *
  */
 void saveLineFollowerSettings() {
-  EEPROM.put(0, baseSpeed);
+  EEPROM.put(0, avoidObstacleMode);
   EEPROM.put(1, minSpeed);
-  EEPROM.put(2, maxSpeed);
-  EEPROM.put(3, kp);
-  EEPROM.put(4, avoidObstacleMode);
+  EEPROM.put(2, baseSpeed);
+  EEPROM.put(3, maxSpeed);
+  EEPROM.put(4, kp);
 
-  Serial.println("Save line follower settings to EEPROM");
+  Serial.println("Save the line follower settings to EEPROM");
 }

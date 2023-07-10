@@ -5,19 +5,20 @@ byte lineSensorValues[lineSensorCount];
 uint8_t numDetectedLineSensor;
 uint16_t currentPosition;
 
+// Line follower settings
 bool lineFollowerMode;
 bool avoidObstacleMode;
-int minSpeed;
-int baseSpeed;
-int maxSpeed;
+unsigned int minSpeed;
+unsigned int baseSpeed;
+unsigned int maxSpeed;
 float kp;
 
 // Initial line follower settings
 const bool defaultMode = false;
 const bool defaultAvoidObstacleMode = false;
-const uint8_t defaultMinSpeed = 0;
-const uint8_t defaultBaseSpeed = 180;
-const uint8_t defaultMaxSpeed = 255;
+const unsigned int defaultMinSpeed = 0;
+const unsigned int defaultBaseSpeed = 180;
+const unsigned int defaultMaxSpeed = 255;
 float defaultKp = 0.40;
 
 // isRunning is used to avoid running stopLineFollower() in a loop
@@ -50,15 +51,16 @@ void loopLineFollower() {
  */
 void runLineFollower() {
   if (isRunning == false) {
+    // Change the led color to Green
+    setMultiColorLed(0, 10, 0, false);
+
     // Play a sound when the line follower starts
     playSequence(S_BUTTON_PUSHED);
   }
 
   isRunning = true;
 
-  // Change the led color to Green
-  setMultiColorLed(0, 10, 0, false);
-
+  // Read line position
   readLinePosition();
 
   // Avoid obstacle closer than 30 cm
@@ -66,13 +68,13 @@ void runLineFollower() {
     avoidObstacle(30);
   }
 
-  // Get IR sensor position
+  // Read line position after obstacle
   readLinePosition();
 
-  // Calculate error position and follow the line
+  // Calculate the error position and follow the line
   calculatePID();
 
-  // Check if finish line is detected
+  // Check if the finish line is detected
   checkFinishLine();
 }
 
@@ -86,7 +88,7 @@ void checkFinishLine() {
 
   // Stop the line follower when all sensors detect a horizontal black line.
   // Avoid stopping if crossing an intersection
-  if (numDetectedLineSensor == 0 && (currentTime - previousTime) > 200) {
+  if (numDetectedLineSensor == 0 && (currentTime - previousTime) > 400) {
     previousTime = currentTime;
     stopLineFollower();
   }
@@ -132,8 +134,7 @@ void calculatePID() {
   // and the current position
   int16_t error = 1000 - currentPosition;
 
-  // Set the motor speed based on proportional, integral, and derivative PID
-  // terms.
+  // Set the motor speed based on proportional, and derivative PID terms.
   float pid = Kp * error + Kd * (error - lastError);
 
   // Record the current error for the next iteration
@@ -143,12 +144,23 @@ void calculatePID() {
   int16_t motorLeftSpeed = constrain(baseSpeed - pid, minSpeed, maxSpeed);
   int16_t motorRightSpeed = constrain(baseSpeed + pid, minSpeed, maxSpeed);
 
+  // Control the speed of both motors
+  speedControl(motorLeftSpeed, motorLeftSpeed);
+
+  // SerialPrintPosition(motorLeftSpeed, motorRightSpeed);
+}
+
+/**
+ * @brief Control the speed of the left and right motors
+ *
+ * @param motorLeftSpeed Motor left speed (0-255)
+ * @param motorLeftSpeed Motor right speed (0-255)
+ */
+void speedControl(uint8_t motorLeftSpeed, uint8_t motorRightSpeed) {
   analogWrite(MOTOR_LEFT_FORWARD_PIN, motorLeftSpeed);
   digitalWrite(MOTOR_LEFT_BACKWARD_PIN, LOW);
   analogWrite(MOTOR_RIGHT_FORWARD_PIN, motorRightSpeed);
   digitalWrite(MOTOR_RIGHT_BACKWARD_PIN, LOW);
-
-  // SerialPrintPosition(motorLeftSpeed, motorRightSpeed);
 }
 
 /**
@@ -262,9 +274,7 @@ void avoidObstacle(uint8_t minObstacleDistance) {
 
     // Stop if the line is detected.
     setDirection(STOP_FAST, 255);
-
-    // Don't stop in the intersection
-    delay(1900);
+    delay(800);
   }
 }
 

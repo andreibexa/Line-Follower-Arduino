@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 
+
+// Push up button to change line follower mode (On/Off)
+#define LINE_FOLLOWER_BUTTON_PIN 2
+
 // Dual-Channel H-Bridge Motor Driver Module - L9110S
 #define MOTOR_RIGHT_FORWARD_PIN 3   // M1(A) - PWM PIN
 #define MOTOR_RIGHT_BACKWARD_PIN 4  //  M1(B)
@@ -21,9 +25,6 @@
 // Serial RX and TX
 #define TX_PIN 11  // TX PIN
 #define RX_PIN 12  // RX PIN
-
-// Push up button to change line follower mode (On/Off)
-#define LINE_FOLLOWER_BUTTON_PIN 13
 
 // Ultrasonic Sensor Module - HC-SR04
 #define ULTRASONIC_TRIG_PIN 22  // TRIG
