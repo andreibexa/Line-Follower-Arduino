@@ -5,10 +5,17 @@
 #include "esp32/system_status/system_status.h"
 #include "esp32/thing_properties/thing_properties.h"
 #include "esp32/wifi_manager/wifi_manager.h"
+#include <esp_bt.h>
 
 // Put your setup code here, to run once:
 void setup() {
   Serial.begin(115200);
+
+  // Disable bluetooth
+  btStop();
+
+  // Set CPU frequency to 80Mhz
+  setCpuFrequencyMhz(80);
 
   // Setup wifi manager in blocking mode, till the access point is configured.
   setupWifiManager();
