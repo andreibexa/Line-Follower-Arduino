@@ -33,14 +33,6 @@ void receiveLineFollowerSettings() {
   baseSpeed = baseSpeed8;
   maxSpeed = maxSpeed8;
 
-  // Serial print all the above received  settings
-  Serial.print("baseSpeed ");
-  Serial.println(baseSpeed);
-
-  Serial.print("maxSpeed ");
-  Serial.println(maxSpeed);
-
-
   // Save line follower settings to EEPROM
   if (avoidObstacleModeTmp != avoidObstacleMode || minSpeedTmp != minSpeed
       || baseSpeedTmp != baseSpeed || maxSpeedTmp != maxSpeed || kpTmp != kp) {

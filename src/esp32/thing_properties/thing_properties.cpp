@@ -26,8 +26,6 @@ bool moveRight;
 void onLineFollowerModeChange() {
   // Add your code here to act upon LineFollowerMode change
   transmitLineFollowerSettings();
-  Serial.print("onLineFollowerModeChange lineFollowerMode ");
-  Serial.println(lineFollowerMode);
 }
 
 /*
@@ -37,8 +35,6 @@ void onLineFollowerModeChange() {
 void onAvoidObstacleModeChange() {
   // Add your code here to act upon avoidObstacleMode change
   transmitLineFollowerSettings();
-  Serial.print("onAvoidObstacleModeChange avoidObstacleMode ");
-  Serial.println(avoidObstacleMode);
 }
 
 /*
@@ -48,8 +44,6 @@ void onAvoidObstacleModeChange() {
 void onMinSpeedChange() {
   // Add your code here to act upon MinSpeed change
   transmitLineFollowerSettings();
-  Serial.print("onMinSpeedChange minSpeed ");
-  Serial.println(minSpeed);
 }
 
 /*
@@ -59,8 +53,6 @@ void onMinSpeedChange() {
 void onBaseSpeedChange() {
   // Add your code here to act upon BaseSpeed change
   transmitLineFollowerSettings();
-  Serial.print("onBaseSpeedChange baseSpeed ");
-  Serial.println(baseSpeed);
 }
 
 /*
@@ -70,8 +62,6 @@ void onBaseSpeedChange() {
 void onMaxSpeedChange() {
   // Add your code here to act upon MaxSpeed change
   transmitLineFollowerSettings();
-  Serial.print("onMaxSpeedChange maxSpeed ");
-  Serial.println(maxSpeed);
 }
 
 /*
@@ -81,8 +71,6 @@ void onMaxSpeedChange() {
 void onKpChange() {
   // Add your code here to act upon Kp change
   transmitLineFollowerSettings();
-  Serial.println("onKpChange kp ");
-  Serial.println(kp);
 }
 
 

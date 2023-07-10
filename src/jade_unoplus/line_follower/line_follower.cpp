@@ -147,7 +147,7 @@ void calculatePID() {
   // Control the speed of both motors
   speedControl(motorLeftSpeed, motorLeftSpeed);
 
-  // SerialPrintPosition(motorLeftSpeed, motorRightSpeed);
+  SerialPrintPosition(motorLeftSpeed, motorRightSpeed);
 }
 
 /**

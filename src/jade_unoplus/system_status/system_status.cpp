@@ -62,7 +62,7 @@ void handleStatusFromESP32() {
  */
 void displayBatteryStatus() {
   // Read the battery voltage each second
-  static unsigned long previousMillis = 0;
+  static unsigned long previousMillis = 1000;
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= 1000) {
     previousMillis = currentMillis;

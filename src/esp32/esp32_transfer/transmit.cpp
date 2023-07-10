@@ -27,25 +27,6 @@ void transmitLineFollowerSettings() {
   sendSize = serialTransfer.txObj(kp, sendSize);
 
   serialTransfer.sendData(sendSize, PacketId::kCloudLineFollowerSettings);
-
-  // Serial print all the above received  settings
-  Serial.print("lineFollowerMode ");
-  Serial.println(lineFollowerMode);
-
-  Serial.print("avoidObstacleMode ");
-  Serial.println(avoidObstacleMode);
-
-  Serial.print("minSpeed ");
-  Serial.println(minSpeed);
-
-  Serial.print("baseSpeed ");
-  Serial.println(baseSpeed);
-
-  Serial.print("maxSpeed ");
-  Serial.println(maxSpeed);
-
-  Serial.print("kp ");
-  Serial.println(kp);
 }
 
 /**

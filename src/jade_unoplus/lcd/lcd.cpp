@@ -12,7 +12,9 @@ LiquidCrystal_I2C lcd(0x27, 20, 2);
 void setupLCD() {
   // Initialize the lcd
   lcd.init();
-  lcd.setBacklight(5);
+
+  // Turn on backlight
+  lcd.backlight();
 
   // Custom lcd characters. Maximum 8 allowed
   lcd.createChar(0, battery18650);
