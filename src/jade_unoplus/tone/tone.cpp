@@ -11,9 +11,7 @@ void playTone(float noteFrequency, long noteDuration, int silentDuration) {
   if (silentDuration == 0) {
     silentDuration = 1;
   }
-
   tone(BUZZER_PIN, noteFrequency, noteDuration);
-  delay(noteDuration);
   delay(silentDuration);
 }
 
@@ -33,7 +31,6 @@ void bendTones(float initFrequency, float finalFrequency, float prop,
   }
 
   float currentFrequency = initFrequency;
-
   if (initFrequency < finalFrequency) {
     while (currentFrequency < finalFrequency) {
       playTone(currentFrequency, noteDuration, silentDuration);
@@ -45,7 +42,6 @@ void bendTones(float initFrequency, float finalFrequency, float prop,
       currentFrequency /= prop;
     }
   }
-
   noTone(BUZZER_PIN);
 }
 
@@ -62,15 +58,15 @@ void playSequence(uint8_t sequence) {
       playTone(NOTE_A6, 60, 10);
       break;
     case S_BUTTON_PUSHED: bendTones(NOTE_E6, NOTE_D7, 1.04, 10, 2); break;
-    case S_SLEEPING:
-      bendTones(100, 500, 1.04, 10, 10);
+    case S_STOP:
+      bendTones(100, 500, 1.04, 10, 20);
       delay(500);
-      bendTones(400, 100, 1.04, 10, 1);
+      bendTones(400, 100, 1.04, 10, 11);
       break;
-    case S_CONFUSED:
-      bendTones(1000, 1700, 1.03, 8, 2);
-      bendTones(1699, 500, 1.04, 8, 3);
-      bendTones(1000, 1700, 1.05, 9, 10);
+    case S_OBSTACLE:
+      bendTones(1000, 1700, 1.03, 8, 10);
+      bendTones(1699, 500, 1.04, 8, 11);
+      bendTones(1000, 1700, 1.05, 9, 19);
       break;
   }
 }

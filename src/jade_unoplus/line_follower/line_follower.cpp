@@ -116,7 +116,7 @@ void stopLineFollower() {
   lineFollowerMode = false;
   transmitLineFollowerSettings();
 
-  playSequence(S_SLEEPING);
+  playSequence(S_STOP);
 }
 
 /**
@@ -141,13 +141,13 @@ void calculatePID() {
   lastError = error;
 
   // Calculate the motor speeds based on the PID control signal
-  int16_t motorLeftSpeed = constrain(baseSpeed - pid, minSpeed, maxSpeed);
-  int16_t motorRightSpeed = constrain(baseSpeed + pid, minSpeed, maxSpeed);
+  uint8_t motorLeftSpeed = constrain(baseSpeed - pid, minSpeed, maxSpeed);
+  uint8_t motorRightSpeed = constrain(baseSpeed + pid, minSpeed, maxSpeed);
 
   // Control the speed of both motors
-  speedControl(motorLeftSpeed, motorLeftSpeed);
+  speedControl(motorLeftSpeed, motorRightSpeed);
 
-  SerialPrintPosition(motorLeftSpeed, motorRightSpeed);
+  // SerialPrintPosition(motorLeftSpeed, motorRightSpeed);
 }
 
 /**
@@ -241,7 +241,7 @@ void avoidObstacle(uint8_t minObstacleDistance) {
   if (getDistance() < minObstacleDistance) {
     // Stop if obstacle is detected
     setDirection(STOP_FAST, 255);
-    playSequence(S_CONFUSED);
+    playSequence(S_OBSTACLE);
     delay(1500);
 
     readLinePosition();
@@ -261,7 +261,7 @@ void avoidObstacle(uint8_t minObstacleDistance) {
 
     // Turn left
     setDirection(LEFT_WIDE_FORWARD, 200);
-    delay(700);
+    delay(900);
 
     readLinePosition();
     // Go forward at 45 degree

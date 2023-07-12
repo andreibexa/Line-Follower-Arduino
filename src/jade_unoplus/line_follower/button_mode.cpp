@@ -33,6 +33,8 @@ void debounceLineFollowerButton() {
       if (buttonState == HIGH) {
         // Button was pressed
         lineFollowerMode = !lineFollowerMode;
+        Serial.print("button ");
+        Serial.println(lineFollowerMode);
       }
     }
   }
